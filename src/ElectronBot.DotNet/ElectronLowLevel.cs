@@ -45,9 +45,52 @@ public class ElectronLowLevel : IElectronLowLevel
 
     private readonly ILogger<ElectronLowLevel> _logger;
 
+    public ElectronLowLevel()
+    {
+            
+    }
     public ElectronLowLevel(ILogger<ElectronLowLevel> logger)
     {
         _logger = logger;
+    }
+
+    public ElectronLowLevel(UsbDevice? usbDevice)
+    {
+        if (_usbDevice == null)
+        {
+            _usbDevice = usbDevice;
+
+            if (_usbDevice != null)
+            {
+                _wholeUsbDevice = _usbDevice as IUsbDevice;
+
+                if (_wholeUsbDevice is not null)
+                {
+
+
+                    if (_wholeUsbDevice.DriverMode == UsbDevice.DriverModeType.MonoLibUsb)
+                    { 
+                        _ = _wholeUsbDevice.SetAutoDetachKernelDriver(true);
+                    }
+
+                    // This is a "whole" USB device. Before it can be used, 
+                    // the desired configuration and interface must be selected.
+
+                    // Select config #1
+                    _wholeUsbDevice.SetConfiguration(1);
+
+                    // Claim interface #0.
+                    _ = _wholeUsbDevice.ClaimInterface(0);
+                }
+
+
+                _reader = _usbDevice.OpenEndpointReader(ReadEndpointID.Ep01);
+
+                _writer = _usbDevice.OpenEndpointWriter(WriteEndpointID.Ep01);
+
+                _isConnected = _usbDevice.IsOpen;
+            }
+        }
     }
 
     public bool IsConnected => _isConnected;
@@ -393,5 +436,26 @@ public class ElectronLowLevel : IElectronLowLevel
 
             frameBufferOffset += 192;
         }
+    }
+
+    public List<IElectronLowLevel> GetElectronBotList()
+    {
+        var list = new List<IElectronLowLevel>();
+
+        var usbFinder = new UsbDeviceFinder(Vid, Pid);
+
+        var allDevices = UsbDevice.AllDevices.FindAll(usbFinder);
+
+        if (allDevices != null && allDevices.Count > 0)
+        {
+            foreach (UsbRegistry usbRegistry in allDevices)
+            {
+
+                usbRegistry.Open(out var usbDevice);
+                var device = new ElectronLowLevel(usbDevice);
+                list.Add(device);
+            }
+        }
+        return list;
     }
 }

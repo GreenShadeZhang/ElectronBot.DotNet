@@ -63,4 +63,10 @@ public interface IElectronLowLevel
     /// </summary>
     /// <returns>额外数据的结果</returns>
     byte[] GetExtraData();
+
+    /// <summary>
+    /// 获取在线电子列表
+    /// </summary>
+    /// <returns></returns>
+    List<IElectronLowLevel> GetElectronBotList();
 }

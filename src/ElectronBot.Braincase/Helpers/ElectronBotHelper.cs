@@ -24,6 +24,8 @@ public class ElectronBotHelper
         get; set;
     }
 
+    public Dictionary<string, IElectronLowLevel> ElectronBotDic = new();
+
     public bool PlayEmojisLock
     {
         get; set;
@@ -174,12 +176,24 @@ public class ElectronBotHelper
             {
                 if (frame != null)
                 {
-                    if (ElectronBot is not null)
+                    if (ElectronBotDic.Count > 0)
                     {
-                        ElectronBot.SetImageSrc(frame.FrameBuffer);
-                        ElectronBot.SetJointAngles(frame.J1, frame.J2, frame.J3, frame.J4, frame.J5, frame.J6, frame.Enable);
-                        ElectronBot.Sync();
+                        foreach (var electronBot in ElectronBotDic)
+                        {
+                            if (electronBot.Value is not null)
+                            {
+                                electronBot.Value.SetImageSrc(frame.FrameBuffer);
+                                electronBot.Value.SetJointAngles(frame.J1, frame.J2, frame.J3, frame.J4, frame.J5, frame.J6, frame.Enable);
+                                electronBot.Value.Sync();
+                            }
+                        }
                     }
+                    //if (ElectronBot is not null)
+                    //{
+                    //    ElectronBot.SetImageSrc(frame.FrameBuffer);
+                    //    ElectronBot.SetJointAngles(frame.J1, frame.J2, frame.J3, frame.J4, frame.J5, frame.J6, frame.Enable);
+                    //    ElectronBot.Sync();
+                    //}
                 }
             }
             catch (Exception)
@@ -299,9 +313,25 @@ public class ElectronBotHelper
 
                 Thread.Sleep(5000);
 
-                ElectronBot = new ElectronLowLevel(App.GetService<ILogger<ElectronLowLevel>>());
+                var device = new ElectronLowLevel();
 
-                EbConnected = ElectronBot.Connect();
+                var list = device.GetElectronBotList();
+
+                foreach (var item in list)
+                {
+                    ElectronBotDic.TryAdd(Guid.NewGuid().ToString(), item);
+                }
+
+                ElectronBot = list.FirstOrDefault();
+
+                if (ElectronBot != null)
+                {
+                    EbConnected = ElectronBot.IsConnected;
+                }
+
+                //ElectronBot = new ElectronLowLevel(App.GetService<ILogger<ElectronLowLevel>>());
+
+                //EbConnected = ElectronBot.Connect();
 
                 //InvokeClockCanvasStart();
 
