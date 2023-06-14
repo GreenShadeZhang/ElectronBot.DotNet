@@ -27,6 +27,7 @@ using Services;
 using System.Diagnostics;
 using Windows.Graphics.Imaging;
 using Mediapipe.Net.Solutions;
+using Microsoft.UI;
 
 namespace ViewModels;
 public partial class ModelLoadCompactOverlayViewModel : ObservableRecipient
@@ -114,7 +115,7 @@ public partial class ModelLoadCompactOverlayViewModel : ObservableRecipient
         DiffuseColor = Color.LightPink// DiffuseMaterials.ToColor(255, 192, 203, 1.0),
     };
 
-    [ObservableProperty] private SolidColorBrush _cameraBackground =  new (Windows.UI.Color.FromArgb(1,193,193,1));
+    [ObservableProperty] private SolidColorBrush _cameraBackground =  new (Colors.Red);
 
     [ObservableProperty]
     private Image _faceImage = new();
@@ -470,6 +471,8 @@ public partial class ModelLoadCompactOverlayViewModel : ObservableRecipient
         CameraFrameService.Current.SoftwareBitmapFrameHandPredictResult += Current_SoftwareBitmapFrameHandPredictResult;
 
         _isInitialized = true;
+
+        CameraBackground = new SolidColorBrush(Colors.Green);
     }
 
     private void Current_SoftwareBitmapFrameHandPredictResult(object? sender, string e)
