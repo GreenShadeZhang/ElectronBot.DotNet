@@ -17,8 +17,16 @@ using SharpDX;
 using Assimp;
 using HelixToolkit.SharpDX.Core.Assimp;
 using HelixToolkit.SharpDX.Core.Model.Scene;
+using Microsoft.UI.Xaml.Media;
 using BoundingBox = SharpDX.BoundingBox;
 using Camera = HelixToolkit.WinUI.Camera;
+using Matrix = SharpDX.Matrix;
+using Microsoft.UI.Xaml.Controls;
+using ElectronBot.Braincase.Services;
+using Services;
+using System.Diagnostics;
+using Windows.Graphics.Imaging;
+using Mediapipe.Net.Solutions;
 
 namespace ViewModels;
 public partial class ModelLoadCompactOverlayViewModel : ObservableRecipient
@@ -96,6 +104,8 @@ public partial class ModelLoadCompactOverlayViewModel : ObservableRecipient
 
     [ObservableProperty] private TextureModel _environmentMap;
 
+    private bool _isInitialized = false;
+
     private readonly Importer _importer = new();
 
     private readonly DiffuseMaterial _pinkModelMaterial = new()
@@ -104,7 +114,12 @@ public partial class ModelLoadCompactOverlayViewModel : ObservableRecipient
         DiffuseColor = Color.LightPink// DiffuseMaterials.ToColor(255, 192, 203, 1.0),
     };
 
+    [ObservableProperty] private SolidColorBrush _cameraBackground =  new (Windows.UI.Color.FromArgb(1,193,193,1));
 
+    [ObservableProperty]
+    private Image _faceImage = new();
+
+    private static HandsCpuSolution? calculator;
     public Camera Camera
     {
         get;
@@ -119,6 +134,8 @@ public partial class ModelLoadCompactOverlayViewModel : ObservableRecipient
             EnableUnLit = false,
             DiffuseMap = LoadTexture("eyes-closed.png")
         };
+
+        calculator = new HandsCpuSolution();
 
         var filePath = Package.Current.InstalledLocation.Path + "\\Assets\\model-backgroud.jpg";
 
@@ -139,9 +156,13 @@ public partial class ModelLoadCompactOverlayViewModel : ObservableRecipient
         ElectronBotHelper.Instance.PlayEmojisLock = true;
     }
 
+    [ObservableProperty]
+    private string _resultLabel;
+
+    private readonly string modelPath = Package.Current.InstalledLocation.Path + $"\\Assets\\MLModel1.zip";
 
     [RelayCommand]
-    public void Loaded()
+    public async void Loaded()
     {
         try
         {
@@ -415,6 +436,8 @@ public partial class ModelLoadCompactOverlayViewModel : ObservableRecipient
             FocusCameraToScene();
 
             ElectronBotHelper.Instance.ModelActionFrame += Instance_ModelActionFrame;
+
+            await InitAsync();
         }
         catch (Exception)
         {
@@ -422,7 +445,59 @@ public partial class ModelLoadCompactOverlayViewModel : ObservableRecipient
         }
     }
 
-    public void UnLoaded()
+
+    private async Task InitAsync()
+    {
+        if (_isInitialized)
+        {
+            CameraFrameService.Current.SoftwareBitmapFrameCaptured -= Current_SoftwareBitmapFrameCaptured;
+
+            CameraFrameService.Current.SoftwareBitmapFrameHandPredictResult -= Current_SoftwareBitmapFrameHandPredictResult;
+            await CameraFrameService.Current.CleanupMediaCaptureAsync();
+        }
+        else
+        {
+            await InitializeScreenAsync();
+        }
+    }
+
+    private async Task InitializeScreenAsync()
+    {
+        await CameraFrameService.Current.PickNextMediaSourceWorkerAsync(FaceImage);
+
+        CameraFrameService.Current.SoftwareBitmapFrameCaptured += Current_SoftwareBitmapFrameCaptured;
+
+        CameraFrameService.Current.SoftwareBitmapFrameHandPredictResult += Current_SoftwareBitmapFrameHandPredictResult;
+
+        _isInitialized = true;
+    }
+
+    private void Current_SoftwareBitmapFrameHandPredictResult(object? sender, string e)
+    {
+        App.MainWindow.DispatcherQueue.TryEnqueue(() =>
+        {
+            ResultLabel = e;
+        });
+    }
+
+    private void Current_SoftwareBitmapFrameCaptured(object? sender, SoftwareBitmapEventArgs e)
+    {
+        if (e.SoftwareBitmap is not null)
+        {
+
+            if (e.SoftwareBitmap.BitmapPixelFormat != BitmapPixelFormat.Bgra8 ||
+                  e.SoftwareBitmap.BitmapAlphaMode == BitmapAlphaMode.Straight)
+            {
+                e.SoftwareBitmap = SoftwareBitmap.Convert(
+                    e.SoftwareBitmap, BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied);
+            }
+            var service = App.GetService<GestureClassificationService>();
+
+            _ = service.HandPredictResultUnUseQueueAsync(calculator, modelPath, e.SoftwareBitmap);
+        }
+    }
+
+    public async void UnLoaded()
     {
         ElectronBotHelper.Instance.ModelActionFrame -= Instance_ModelActionFrame;
         HeadModel.Dispose();
@@ -432,6 +507,13 @@ public partial class ModelLoadCompactOverlayViewModel : ObservableRecipient
         BaseModel.Dispose();
         EffectsManager.Dispose();
         _importer.Dispose();
+
+        CameraFrameService.Current.SoftwareBitmapFrameCaptured -= Current_SoftwareBitmapFrameCaptured;
+
+        CameraFrameService.Current.SoftwareBitmapFrameHandPredictResult -= Current_SoftwareBitmapFrameHandPredictResult;
+        var service = App.GetService<EmoticonActionFrameService>();
+        service.ClearQueue();
+        await CleanUpAsync();
     }
 
     private void Instance_ModelActionFrame(object? sender, Verdure.ElectronBot.Core.Models.ModelActionFrame e)
@@ -553,5 +635,19 @@ public partial class ModelLoadCompactOverlayViewModel : ObservableRecipient
     {
 
         return TextureModel.Create(data);
+    }
+
+    private async Task CleanUpAsync()
+    {
+        try
+        {
+            _isInitialized = false;
+
+            await CameraFrameService.Current.CleanupMediaCaptureAsync();
+        }
+        catch (Exception)
+        {
+
+        }
     }
 }
