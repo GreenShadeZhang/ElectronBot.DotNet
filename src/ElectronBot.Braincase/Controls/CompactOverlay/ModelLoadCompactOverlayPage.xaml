@@ -55,6 +55,20 @@
                 FontSize="16"
                 Foreground="Red"
                 Text="{x:Bind ViewModel.ResultLabel, Mode=OneWay}" />
+
+            <TextBlock
+                Margin="4"
+                HorizontalAlignment="Left"
+                FontSize="16"
+                Foreground="Red"
+                Text="{x:Bind ViewModel.FirstMenuSelected, Mode=OneWay}" />
+
+            <TextBlock
+                Margin="4"
+                HorizontalAlignment="Left"
+                FontSize="16"
+                Foreground="Red"
+                Text="{x:Bind ViewModel.SecondMenuSelected, Mode=OneWay}" />
         </StackPanel>
         <ProgressRing
             x:Name="ModelProgressRing"

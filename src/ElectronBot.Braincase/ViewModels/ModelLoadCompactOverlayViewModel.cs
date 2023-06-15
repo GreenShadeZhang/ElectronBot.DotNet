@@ -28,6 +28,7 @@ using System.Diagnostics;
 using Windows.Graphics.Imaging;
 using Mediapipe.Net.Solutions;
 using Microsoft.UI;
+using Constants = ElectronBot.Braincase.Constants;
 
 namespace ViewModels;
 public partial class ModelLoadCompactOverlayViewModel : ObservableRecipient
@@ -115,7 +116,7 @@ public partial class ModelLoadCompactOverlayViewModel : ObservableRecipient
         DiffuseColor = Color.LightPink// DiffuseMaterials.ToColor(255, 192, 203, 1.0),
     };
 
-    [ObservableProperty] private SolidColorBrush _cameraBackground =  new (Colors.Red);
+    [ObservableProperty] private SolidColorBrush _cameraBackground = new(Colors.Red);
 
     [ObservableProperty]
     private Image _faceImage = new();
@@ -160,7 +161,47 @@ public partial class ModelLoadCompactOverlayViewModel : ObservableRecipient
     [ObservableProperty]
     private string _resultLabel;
 
-    private readonly string modelPath = Package.Current.InstalledLocation.Path + $"\\Assets\\MLModel1.zip";
+    [ObservableProperty] private Stack<string> _menuStack = new();
+
+    private int _firstMenuIndex = 0;
+
+    private int _secondMenuIndex = 0;
+
+    private bool _isFirstMenu = true;
+
+    [ObservableProperty]
+    private List<string> _firstMenu = new()
+    {
+        "ClockMode",
+        "EmojisMode",
+    };
+
+    [ObservableProperty]
+    private Dictionary<string, List<string>> _secondMenu = new()
+    {
+        {"ClockMode", new List<string>()
+        {
+            "DefautView",
+            "LongShadowView",
+            "GooeyFooter",
+            "GradientsWithBlend",
+            "CustomView",
+        } },
+        { "EmojisMode", new List<string>()
+        {
+            "anger",
+            "disdain",
+            "excited",
+            "fear",
+            "sad",
+        } },
+    };
+
+    [ObservableProperty] private string _firstMenuSelected;
+
+    [ObservableProperty] private string _secondMenuSelected;
+
+    private readonly string _modelPath = Package.Current.InstalledLocation.Path + $"\\Assets\\MLModel1.zip";
 
     [RelayCommand]
     public async void Loaded()
@@ -477,10 +518,105 @@ public partial class ModelLoadCompactOverlayViewModel : ObservableRecipient
 
     private void Current_SoftwareBitmapFrameHandPredictResult(object? sender, string e)
     {
+        if (e == "right")
+        {
+            if (!ElectronBotHelper.Instance.RightLock)
+            {
+                if (_isFirstMenu)
+                {
+                    _firstMenuIndex++;
+                }
+                else
+                {
+                    _secondMenuIndex++;
+                }
+                ElectronBotHelper.Instance.RightLock = true;
+                ElectronBotHelper.Instance.LeftLock = false;
+                ElectronBotHelper.Instance.ForwardLock = false;
+                ElectronBotHelper.Instance.LandLock = false;
+            }
+        }
+        else if(e == "left")
+        {
+            if (!ElectronBotHelper.Instance.LeftLock)
+            {
+                if(_isFirstMenu)
+                {
+                    if (_firstMenuIndex > 0)
+                    {
+                        _firstMenuIndex--;
+                    }
+                }
+                else
+                {
+                    if (_secondMenuIndex > 0)
+                    {
+                        _secondMenuIndex--;
+                    }
+                }
+              
+                ElectronBotHelper.Instance.LeftLock = true;
+                ElectronBotHelper.Instance.RightLock = false;
+                ElectronBotHelper.Instance.ForwardLock = false;
+                ElectronBotHelper.Instance.LandLock = false;
+            }
+        }
+        else if (e == "land")
+        {
+            if (!ElectronBotHelper.Instance.LandLock)
+            {
+                if (_isFirstMenu)
+                {
+                    _isFirstMenu = false;
+                }
+
+                ElectronBotHelper.Instance.RightLock = false;
+                ElectronBotHelper.Instance.LeftLock = false;
+                ElectronBotHelper.Instance.ForwardLock = false;
+                ElectronBotHelper.Instance.LandLock = true;
+            }
+          
+        }
+        else if (e == "forward")
+        {
+            if (!ElectronBotHelper.Instance.ForwardLock)
+            {
+                if (!_isFirstMenu)
+                {
+                    _isFirstMenu = true;
+                }
+
+                ElectronBotHelper.Instance.RightLock = false;
+                ElectronBotHelper.Instance.LeftLock = false;
+                ElectronBotHelper.Instance.LandLock = false;
+                ElectronBotHelper.Instance.ForwardLock = true;
+            }
+      
+        }
+
         App.MainWindow.DispatcherQueue.TryEnqueue(() =>
         {
             ResultLabel = e;
+
+
+            if (_firstMenuIndex >= _firstMenu.Count)
+            {
+                _firstMenuIndex = _firstMenu.Count - 1;
+            }
+
+            FirstMenuSelected = _firstMenu[_firstMenuIndex];
+
+            if (_secondMenu.TryGetValue(FirstMenuSelected, out var meuList))
+            {
+                if (_secondMenuIndex >= meuList.Count)
+                {
+                    _secondMenuIndex = meuList.Count - 1;
+                }
+
+                SecondMenuSelected = meuList[_secondMenuIndex];
+            }
         });
+
     }
 
     private void Current_SoftwareBitmapFrameCaptured(object? sender, SoftwareBitmapEventArgs e)
@@ -496,7 +632,7 @@ public partial class ModelLoadCompactOverlayViewModel : ObservableRecipient
             }
             var service = App.GetService<GestureClassificationService>();
 
-            _ = service.HandPredictResultUnUseQueueAsync(calculator, modelPath, e.SoftwareBitmap);
+            _ = service.HandPredictResultUnUseQueueAsync(calculator, _modelPath, e.SoftwareBitmap);
         }
     }
 
