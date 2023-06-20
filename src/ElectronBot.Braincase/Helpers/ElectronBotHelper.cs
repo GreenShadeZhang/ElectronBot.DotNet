@@ -48,6 +48,12 @@ public class ElectronBotHelper
         set;
     }
 
+    public bool UpLock
+    {
+        get;
+        set;
+    }
+
     public bool ForwardLock
     {
         get;

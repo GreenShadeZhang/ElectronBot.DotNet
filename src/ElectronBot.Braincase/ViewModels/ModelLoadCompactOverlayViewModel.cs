@@ -533,7 +533,7 @@ public partial class ModelLoadCompactOverlayViewModel : ObservableRecipient
                 ElectronBotHelper.Instance.RightLock = true;
                 ElectronBotHelper.Instance.LeftLock = false;
                 ElectronBotHelper.Instance.ForwardLock = false;
-                ElectronBotHelper.Instance.LandLock = false;
+                ElectronBotHelper.Instance.UpLock = false;
             }
         }
         else if(e == "left")
@@ -558,22 +558,60 @@ public partial class ModelLoadCompactOverlayViewModel : ObservableRecipient
                 ElectronBotHelper.Instance.LeftLock = true;
                 ElectronBotHelper.Instance.RightLock = false;
                 ElectronBotHelper.Instance.ForwardLock = false;
-                ElectronBotHelper.Instance.LandLock = false;
+                ElectronBotHelper.Instance.UpLock = false;
             }
         }
-        else if (e == "land")
+        else if (e == "up")
         {
-            if (!ElectronBotHelper.Instance.LandLock)
+            if (!ElectronBotHelper.Instance.UpLock)
             {
                 if (_isFirstMenu)
                 {
                     _isFirstMenu = false;
+                    _secondMenuIndex = 0;
                 }
 
                 ElectronBotHelper.Instance.RightLock = false;
                 ElectronBotHelper.Instance.LeftLock = false;
                 ElectronBotHelper.Instance.ForwardLock = false;
-                ElectronBotHelper.Instance.LandLock = true;
+                ElectronBotHelper.Instance.UpLock = true;
+
+
+                App.MainWindow.DispatcherQueue.TryEnqueue(() =>
+                {
+                    ResultLabel = e;
+
+
+                    if (_firstMenuIndex >= _firstMenu.Count)
+                    {
+                        _firstMenuIndex = _firstMenu.Count - 1;
+                    }
+
+                    FirstMenuSelected = _firstMenu[_firstMenuIndex];
+
+                    if (_secondMenu.TryGetValue(FirstMenuSelected, out var meuList))
+                    {
+                        if (_secondMenuIndex >= meuList.Count)
+                        {
+                            _secondMenuIndex = meuList.Count - 1;
+                        }
+
+                        SecondMenuSelected = meuList[_secondMenuIndex];
+                    }
+
+                    if (FirstMenuSelected == "EmojisMode")
+                    {
+                        var playEmojisLock = ElectronBotHelper.Instance.PlayEmojisLock;
+
+                        if (!playEmojisLock)
+                        {
+                            //随机播放表情
+                            ElectronBotHelper.Instance.ToPlayEmojisRandom();
+                        }
+
+                        ElectronBotHelper.Instance.PlayEmojisLock = true;
+                    }
+                });
             }
           
         }
@@ -581,42 +619,19 @@ public partial class ModelLoadCompactOverlayViewModel : ObservableRecipient
         {
             if (!ElectronBotHelper.Instance.ForwardLock)
             {
-                if (!_isFirstMenu)
-                {
-                    _isFirstMenu = true;
-                }
+                _isFirstMenu = true;
+
+                _firstMenuIndex = 0;
+                _secondMenuIndex = 0;
+
 
                 ElectronBotHelper.Instance.RightLock = false;
                 ElectronBotHelper.Instance.LeftLock = false;
-                ElectronBotHelper.Instance.LandLock = false;
+                ElectronBotHelper.Instance.UpLock = false;
                 ElectronBotHelper.Instance.ForwardLock = true;
             }
       
         }
-
-        App.MainWindow.DispatcherQueue.TryEnqueue(() =>
-        {
-            ResultLabel = e;
-
-
-            if (_firstMenuIndex >= _firstMenu.Count)
-            {
-                _firstMenuIndex = _firstMenu.Count - 1;
-            }
-
-            FirstMenuSelected = _firstMenu[_firstMenuIndex];
-
-            if (_secondMenu.TryGetValue(FirstMenuSelected, out var meuList))
-            {
-                if (_secondMenuIndex >= meuList.Count)
-                {
-                    _secondMenuIndex = meuList.Count - 1;
-                }
-
-                SecondMenuSelected = meuList[_secondMenuIndex];
-            }
-        });
-
     }
 
     private void Current_SoftwareBitmapFrameCaptured(object? sender, SoftwareBitmapEventArgs e)
