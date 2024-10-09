@@ -34,7 +34,7 @@ public class SparkDeskChatbotClient : IChatbotClient
 
         try
         {
-            ChatResponse response = await client.ChatAsync(ModelVersion.V3_5, new ChatMessage[]
+            ChatResponse response = await client.ChatAsync(ModelVersion.Max, new ChatMessage[]
          {
             ChatMessage.FromUser(message),
 
