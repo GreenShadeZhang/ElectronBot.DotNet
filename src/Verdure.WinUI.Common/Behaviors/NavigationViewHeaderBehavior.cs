@@ -1,4 +1,5 @@
-﻿using ElectronBot.Braincase.Contracts.Services;
+﻿using CommunityToolkit.Mvvm.DependencyInjection;
+using ElectronBot.Braincase.Contracts.Services;
 
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -52,7 +53,7 @@ public class NavigationViewHeaderBehavior : Behavior<NavigationView>
     {
         base.OnAttached();
 
-        var navigationService = App.GetService<INavigationService>();
+        var navigationService = Ioc.Default.GetService<INavigationService>();
         navigationService.Navigated += OnNavigated;
 
         _current = this;
@@ -62,7 +63,7 @@ public class NavigationViewHeaderBehavior : Behavior<NavigationView>
     {
         base.OnDetaching();
 
-        var navigationService = App.GetService<INavigationService>();
+        var navigationService = Ioc.Default.GetService<INavigationService>();
         navigationService.Navigated -= OnNavigated;
     }
 

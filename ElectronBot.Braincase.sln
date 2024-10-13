@@ -29,9 +29,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Verdure.Braincase.Controls"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Verdure.IoT.Net", "src\Verdure.IoT.Net\Verdure.IoT.Net.csproj", "{73621DB4-E32F-477B-86BB-9C03C048F1EA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElectronBot.DotNet.WinUsb", "src\ElectronBot.DotNet.WinUsb\ElectronBot.DotNet.WinUsb.csproj", "{B08EB606-B9C8-4291-96BD-AC027092625C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ElectronBot.DotNet.WinUsb", "src\ElectronBot.DotNet.WinUsb\ElectronBot.DotNet.WinUsb.csproj", "{B08EB606-B9C8-4291-96BD-AC027092625C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElectronBot.DotNet.LibUsb", "src\ElectronBot.DotNet.LibUsb\ElectronBot.DotNet.LibUsb.csproj", "{4A9E0A47-6386-45F2-84FF-3ACEC37B6A8E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ElectronBot.DotNet.LibUsb", "src\ElectronBot.DotNet.LibUsb\ElectronBot.DotNet.LibUsb.csproj", "{4A9E0A47-6386-45F2-84FF-3ACEC37B6A8E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Verdure.WinUI.Common", "src\Verdure.WinUI.Common\Verdure.WinUI.Common.csproj", "{6085A146-AAB7-4CC5-8A5D-17A9FD1D495B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -277,6 +279,22 @@ Global
 		{4A9E0A47-6386-45F2-84FF-3ACEC37B6A8E}.Release|x64.Build.0 = Release|Any CPU
 		{4A9E0A47-6386-45F2-84FF-3ACEC37B6A8E}.Release|x86.ActiveCfg = Release|Any CPU
 		{4A9E0A47-6386-45F2-84FF-3ACEC37B6A8E}.Release|x86.Build.0 = Release|Any CPU
+		{6085A146-AAB7-4CC5-8A5D-17A9FD1D495B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6085A146-AAB7-4CC5-8A5D-17A9FD1D495B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6085A146-AAB7-4CC5-8A5D-17A9FD1D495B}.Debug|arm64.ActiveCfg = Debug|Any CPU
+		{6085A146-AAB7-4CC5-8A5D-17A9FD1D495B}.Debug|arm64.Build.0 = Debug|Any CPU
+		{6085A146-AAB7-4CC5-8A5D-17A9FD1D495B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6085A146-AAB7-4CC5-8A5D-17A9FD1D495B}.Debug|x64.Build.0 = Debug|Any CPU
+		{6085A146-AAB7-4CC5-8A5D-17A9FD1D495B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6085A146-AAB7-4CC5-8A5D-17A9FD1D495B}.Debug|x86.Build.0 = Debug|Any CPU
+		{6085A146-AAB7-4CC5-8A5D-17A9FD1D495B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6085A146-AAB7-4CC5-8A5D-17A9FD1D495B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6085A146-AAB7-4CC5-8A5D-17A9FD1D495B}.Release|arm64.ActiveCfg = Release|Any CPU
+		{6085A146-AAB7-4CC5-8A5D-17A9FD1D495B}.Release|arm64.Build.0 = Release|Any CPU
+		{6085A146-AAB7-4CC5-8A5D-17A9FD1D495B}.Release|x64.ActiveCfg = Release|Any CPU
+		{6085A146-AAB7-4CC5-8A5D-17A9FD1D495B}.Release|x64.Build.0 = Release|Any CPU
+		{6085A146-AAB7-4CC5-8A5D-17A9FD1D495B}.Release|x86.ActiveCfg = Release|Any CPU
+		{6085A146-AAB7-4CC5-8A5D-17A9FD1D495B}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
