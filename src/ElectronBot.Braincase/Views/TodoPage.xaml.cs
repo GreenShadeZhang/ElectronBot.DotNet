@@ -30,7 +30,7 @@ public sealed partial class TodoPage : Page
 
     public TodoPage()
     {
-        ViewModel = App.GetService<TodoViewModel>();
+        ViewModel = Ioc.Default.GetService<TodoViewModel>();
 
         InitializeComponent();
     }

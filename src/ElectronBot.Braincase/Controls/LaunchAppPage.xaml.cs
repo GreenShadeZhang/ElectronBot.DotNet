@@ -22,7 +22,7 @@ namespace Controls
 
         public LaunchAppPage()
         {
-            ViewModel = App.GetService<LaunchAppViewModel>();
+            ViewModel = Ioc.Default.GetService<LaunchAppViewModel>();
             DataContext = ViewModel;
             this.InitializeComponent();
         }

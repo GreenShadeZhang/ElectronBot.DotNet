@@ -112,7 +112,7 @@ public partial class Hw75ViewModel : ObservableRecipient, INavigationAware
 
         try
         {
-            var device = App.GetService<IHw75DynamicDevice>();
+            var device = Ioc.Default.GetService<IHw75DynamicDevice>();
             DeviceInfo = device.Open();
 
             var firmwareInfo = device.GetVersion();

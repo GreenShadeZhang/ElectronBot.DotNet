@@ -41,7 +41,7 @@ public sealed partial class CustomClockView : UserControl
     public CustomClockView()
     {
         this.InitializeComponent();
-        ViewModel = App.GetService<ClockViewModel>();
+        ViewModel = Ioc.Default.GetService<ClockViewModel>();
     }
 
     private async void Canvas_CreateResources(CanvasControl sender, CanvasCreateResourcesEventArgs args)

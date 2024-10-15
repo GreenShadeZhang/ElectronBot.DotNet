@@ -33,7 +33,7 @@ namespace ElectronBot.Braincase.Views
         public PoseRecognitionPage()
         {
             this.InitializeComponent();
-            ViewModel = App.GetService<PoseRecognitionViewModel>();
+            ViewModel = Ioc.Default.GetService<PoseRecognitionViewModel>();
         }
 
 

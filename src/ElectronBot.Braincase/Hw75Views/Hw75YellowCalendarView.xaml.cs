@@ -29,7 +29,7 @@ namespace Hw75Views
         public Hw75YellowCalendarView()
         {
             this.InitializeComponent();
-            ViewModel = App.GetService<Hw75YellowCalendarViewModel>();
+            ViewModel = Ioc.Default.GetService<Hw75YellowCalendarViewModel>();
         }
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)

@@ -13,7 +13,7 @@ public sealed partial class MoviePage : Page
 
     public MoviePage()
     {
-        ViewModel = App.GetService<MovieViewModel>();
+        ViewModel = Ioc.Default.GetService<MovieViewModel>();
         InitializeComponent();
     }
 

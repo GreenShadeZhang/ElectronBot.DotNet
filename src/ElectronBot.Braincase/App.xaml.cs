@@ -75,18 +75,18 @@ public partial class App : Application
     {
         InitializeComponent();
 
-        ConfigureServicesExtensions.AddServices();
+        
 
         Host = Microsoft.Extensions.Hosting.Host.
         CreateDefaultBuilder().
         UseContentRoot(AppContext.BaseDirectory).
         ConfigureServices((context, services) =>
         {
-            services.Configure<LocalSettingsOptions>(context.Configuration.GetSection(nameof(LocalSettingsOptions)));
+            services.AddServices(context.Configuration);
         }).
         Build();
 
-        App.GetService<IAppNotificationService>().Initialize();
+        Ioc.Default.GetService<IAppNotificationService>().Initialize();
 
         UnhandledException += App_UnhandledException;
     }
@@ -98,7 +98,7 @@ public partial class App : Application
 
         ElectronBotHelper.Instance.InvokeClockCanvasStop();
 
-        var service = App.GetService<EmoticonActionFrameService>();
+        var service = Ioc.Default.GetService<EmoticonActionFrameService>();
 
         service.ClearQueue();
 
@@ -116,16 +116,16 @@ public partial class App : Application
         base.OnLaunched(args);
 
         MainWindow.AppWindow.Closing += AppWindow_Closing;
-        //App.GetService<IAppNotificationService>().Show(string.Format("AppNotificationSamplePayload".GetLocalized(), AppContext.BaseDirectory));
+        //Ioc.Default.GetService<IAppNotificationService>().Show(string.Format("AppNotificationSamplePayload".GetLocalized(), AppContext.BaseDirectory));
 
-        await App.GetService<IActivationService>().ActivateAsync(args);
+        await Ioc.Default.GetService<IActivationService>().ActivateAsync(args);
     }
 
     private async void AppWindow_Closing(AppWindow sender, AppWindowClosingEventArgs args)
     {
         args.Cancel = true;
 
-        var theme = App.GetService<IThemeSelectorService>();
+        var theme = Ioc.Default.GetService<IThemeSelectorService>();
 
         var dialog = new ContentDialog
         {
@@ -149,7 +149,7 @@ public partial class App : Application
             {
                 ElectronBotHelper.Instance.InvokeClockCanvasStop();
 
-                var service = App.GetService<EmoticonActionFrameService>();
+                var service = Ioc.Default.GetService<EmoticonActionFrameService>();
 
                 service.ClearQueue();
 

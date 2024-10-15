@@ -34,7 +34,7 @@ public sealed partial class GestureAppConfigPage : Page
 
     public GestureAppConfigPage()
     {
-        ViewModel = App.GetService<GestureAppConfigViewModel>();
+        ViewModel = Ioc.Default.GetService<GestureAppConfigViewModel>();
 
         InitializeComponent();
     }

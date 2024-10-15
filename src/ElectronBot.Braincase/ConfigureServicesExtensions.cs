@@ -4,6 +4,7 @@ using Controls.CompactOverlay;
 using ElectronBot.Braincase.Activation;
 using ElectronBot.Braincase.ClockViews;
 using ElectronBot.Braincase.Contracts.Services;
+using ElectronBot.Braincase.Models;
 using ElectronBot.Braincase.Notifications;
 using ElectronBot.Braincase.Picker;
 using ElectronBot.Braincase.Services;
@@ -15,6 +16,7 @@ using ElectronBot.DotNet.WinUsb;
 using HelixToolkit.SharpDX.Core;
 using HelloWordKeyboard.DotNet;
 using Hw75Views;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Graphics.Canvas;
 using Microsoft.UI.Xaml;
@@ -22,23 +24,20 @@ using Microsoft.UI.Xaml.Media.Imaging;
 using Services;
 using Verdure.ElectronBot.Core.Contracts.Services;
 using Verdure.ElectronBot.Core.Services;
-using Verdure.ElectronBot.GrpcService;
 using ViewModels;
 using Views;
 using Windows.Media.Playback;
 
 namespace ElectronBot.Braincase;
-public class ConfigureServicesExtensions
+public static class ConfigureServicesExtensions
 {
-    public static void AddServices()
+    public static void AddServices(this IServiceCollection services, IConfiguration config)
     {
         var canvasDevice = CanvasDevice.GetSharedDevice();
-
+        services.Configure<LocalSettingsOptions>(config.GetSection(nameof(LocalSettingsOptions)));
         // Register 
         Ioc.Default.ConfigureServices(
-            new ServiceCollection()
-
-            .AddSingleton(canvasDevice)
+            services.AddSingleton(canvasDevice)
             // Default Activation Handler
             .AddTransient<ActivationHandler<LaunchActivatedEventArgs>, DefaultActivationHandler>()
 

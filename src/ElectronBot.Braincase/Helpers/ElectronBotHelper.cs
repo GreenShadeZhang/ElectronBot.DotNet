@@ -255,7 +255,7 @@ public class ElectronBotHelper
         {
             //InvokeClockCanvasStop();
 
-            var service = App.GetService<EmoticonActionFrameService>();
+            var service = Ioc.Default.GetService<EmoticonActionFrameService>();
 
             service.ClearQueue();
 
@@ -299,7 +299,7 @@ public class ElectronBotHelper
 
             Thread.Sleep(5000);
 
-            ElectronBot = new WinUsbElectronLowLevel(App.GetService<ILogger<WinUsbElectronLowLevel>>());
+            ElectronBot = new WinUsbElectronLowLevel(Ioc.Default.GetService<ILogger<WinUsbElectronLowLevel>>());
 
             EbConnected = ElectronBot.Connect();
 
@@ -321,7 +321,7 @@ public class ElectronBotHelper
 
     private async void ElectronBotHelper_PlayEmojisByNameId(object? sender, string e)
     {
-        var localSettingsService = App.GetService<ILocalSettingsService>();
+        var localSettingsService = Ioc.Default.GetService<ILocalSettingsService>();
         var list = (await localSettingsService
              .ReadSettingAsync<List<EmoticonAction>>(Constants.EmojisActionListKey)) ?? new List<EmoticonAction>();
 
@@ -385,7 +385,7 @@ public class ElectronBotHelper
                     videoPath = emojis.EmojisVideoPath;
                 }
                 _ = ElectronBotHelper.Instance.MediaPlayerPlaySoundAsync(videoPath);
-                await App.GetService<IActionExpressionProvider>().PlayActionExpressionAsync(emojis, actions);
+                await Ioc.Default.GetService<IActionExpressionProvider>().PlayActionExpressionAsync(emojis, actions);
             }
             catch (Exception)
             {
@@ -396,7 +396,7 @@ public class ElectronBotHelper
 
     private async void ElectronBotHelper_PlayEmojisRandom(object? sender, EventArgs e)
     {
-        var localSettingsService = App.GetService<ILocalSettingsService>();
+        var localSettingsService = Ioc.Default.GetService<ILocalSettingsService>();
         var list = (await localSettingsService
              .ReadSettingAsync<List<EmoticonAction>>(Constants.EmojisActionListKey)) ?? new List<EmoticonAction>();
 
@@ -457,7 +457,7 @@ public class ElectronBotHelper
                     videoPath = emojis.EmojisVideoPath;
                 }
                 _ = ElectronBotHelper.Instance.MediaPlayerPlaySoundAsync(videoPath);
-                await App.GetService<IActionExpressionProvider>().PlayActionExpressionAsync(emojis, actions);
+                await Ioc.Default.GetService<IActionExpressionProvider>().PlayActionExpressionAsync(emojis, actions);
             }
             catch (Exception)
             {
@@ -521,7 +521,7 @@ public class ElectronBotHelper
             {
                 //InvokeClockCanvasStop();
 
-                var service = App.GetService<EmoticonActionFrameService>();
+                var service = Ioc.Default.GetService<EmoticonActionFrameService>();
 
                 service.ClearQueue();
 
@@ -607,7 +607,7 @@ public class ElectronBotHelper
 
                     Thread.Sleep(5000);
 
-                    ElectronBot = new LibUsbElectronLowLevel(App.GetService<ILogger<LibUsbElectronLowLevel>>());
+                    ElectronBot = new LibUsbElectronLowLevel(Ioc.Default.GetService<ILogger<LibUsbElectronLowLevel>>());
 
                     EbConnected = ElectronBot.Connect();
 
@@ -654,7 +654,7 @@ public class ElectronBotHelper
         {
             try
             {
-                var localSettingsService = App.GetService<ILocalSettingsService>();
+                var localSettingsService = Ioc.Default.GetService<ILocalSettingsService>();
 
                 var audioModel = await localSettingsService
                     .ReadSettingAsync<ComboxItemModel>(Constants.DefaultAudioNameKey);
@@ -696,7 +696,7 @@ public class ElectronBotHelper
         {
             try
             {
-                var localSettingsService = App.GetService<ILocalSettingsService>();
+                var localSettingsService = Ioc.Default.GetService<ILocalSettingsService>();
 
                 var audioModel = await localSettingsService
                     .ReadSettingAsync<ComboxItemModel>(Constants.DefaultAudioNameKey);
@@ -715,7 +715,7 @@ public class ElectronBotHelper
                     }
                 }
 
-                var speechAndTTSService = App.GetService<ISpeechAndTTSService>();
+                var speechAndTTSService = Ioc.Default.GetService<ISpeechAndTTSService>();
 
                 var stream = await speechAndTTSService.TextToSpeechAsync(content);
 
@@ -733,7 +733,7 @@ public class ElectronBotHelper
     {
         try
         {
-            var speechAndTTSService = App.GetService<ISpeechAndTTSService>();
+            var speechAndTTSService = Ioc.Default.GetService<ISpeechAndTTSService>();
             await speechAndTTSService.ReleaseRecognizerAsync();
             //await speechAndTTSService.CancelAsync();
         }
@@ -770,7 +770,7 @@ public class ElectronBotHelper
 
     public async Task SessionHaSwitchAsync(SessionSwitchReason switchReason)
     {
-        var localSettingsService = App.GetService<ILocalSettingsService>();
+        var localSettingsService = Ioc.Default.GetService<ILocalSettingsService>();
 
         var haSwitchModel = await localSettingsService.ReadSettingAsync<ComboxItemModel>(Constants.DefaultHaSwitchNameKey);
 
@@ -800,7 +800,7 @@ public class ElectronBotHelper
     {
         try
         {
-            var speechAndTTSService = App.GetService<ISpeechAndTTSService>();
+            var speechAndTTSService = Ioc.Default.GetService<ISpeechAndTTSService>();
 
             if (isTTS && _isOpenMediaEnded)
             {
@@ -828,7 +828,7 @@ public class ElectronBotHelper
 
     private async void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
     {
-        var localSettingsService = App.GetService<ILocalSettingsService>();
+        var localSettingsService = Ioc.Default.GetService<ILocalSettingsService>();
 
         var botSetting = await localSettingsService.ReadSettingAsync<BotSetting>(Constants.BotSettingKey);
 

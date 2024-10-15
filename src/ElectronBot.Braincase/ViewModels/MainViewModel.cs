@@ -143,7 +143,7 @@ public partial class MainViewModel : ObservableRecipient, INavigationAware
             }
             else
             {
-                var service = App.GetService<EmoticonActionFrameService>();
+                var service = Ioc.Default.GetService<EmoticonActionFrameService>();
                 service.ClearQueue();
                 await CleanUpAsync();
             }
@@ -238,7 +238,7 @@ public partial class MainViewModel : ObservableRecipient, INavigationAware
                 e.SoftwareBitmap = SoftwareBitmap.Convert(
                     e.SoftwareBitmap, BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied);
             }
-            var service = App.GetService<GestureClassificationService>();
+            var service = Ioc.Default.GetService<GestureClassificationService>();
 
             _ = service.HandPredictResultUnUseQueueAsync(calculator, modelPath, e.SoftwareBitmap);
         }
@@ -302,7 +302,7 @@ public partial class MainViewModel : ObservableRecipient, INavigationAware
 
         ToastHelper.SendToast(text, TimeSpan.FromSeconds(4));
 
-        var localSettingsService = App.GetService<ILocalSettingsService>();
+        var localSettingsService = Ioc.Default.GetService<ILocalSettingsService>();
 
         var list = (await _localSettingsService
             .ReadSettingAsync<List<EmoticonAction>>(Constants.EmojisActionListKey)) ?? new List<EmoticonAction>();
@@ -368,7 +368,7 @@ public partial class MainViewModel : ObservableRecipient, INavigationAware
                     videoPath = emojis.EmojisVideoPath;
                 }
                 _ = ElectronBotHelper.Instance.MediaPlayerPlaySoundByTtsAsync(text, true);
-                await App.GetService<IActionExpressionProvider>().PlayActionExpressionAsync(emojis, actions);
+                await Ioc.Default.GetService<IActionExpressionProvider>().PlayActionExpressionAsync(emojis, actions);
             }
             catch (Exception)
             {
@@ -392,7 +392,7 @@ public partial class MainViewModel : ObservableRecipient, INavigationAware
 
         ToastHelper.SendToast("please wait for a moment", TimeSpan.FromSeconds(4));
 
-        var localSettingsService = App.GetService<ILocalSettingsService>();
+        var localSettingsService = Ioc.Default.GetService<ILocalSettingsService>();
 
         var list = (await _localSettingsService
             .ReadSettingAsync<List<EmoticonAction>>(Constants.EmojisActionListKey)) ?? new List<EmoticonAction>();
@@ -458,19 +458,19 @@ public partial class MainViewModel : ObservableRecipient, INavigationAware
                     videoPath = emojis.EmojisVideoPath;
                 }
                 _ = ElectronBotHelper.Instance.MediaPlayerPlaySoundByTtsAsync("please wait for a moment", false);
-                await App.GetService<IActionExpressionProvider>().PlayActionExpressionAsync(emojis, actions);
+                await Ioc.Default.GetService<IActionExpressionProvider>().PlayActionExpressionAsync(emojis, actions);
 
                 try
                 {
-                    //var chatGPTClient = App.GetService<IChatGPTService>();
+                    //var chatGPTClient = Ioc.Default.GetService<IChatGPTService>();
 
                     //var resultText = await chatGPTClient.AskQuestionResultAsync(args.Result.Text);
 
                     //await ElectronBotHelper.Instance.MediaPlayerPlaySoundByTTSAsync(resultText);
 
-                    var chatBotClientFactory = App.GetService<IChatbotClientFactory>();
+                    var chatBotClientFactory = Ioc.Default.GetService<IChatbotClientFactory>();
 
-                    var chatBotClientName = (await App.GetService<ILocalSettingsService>()
+                    var chatBotClientName = (await Ioc.Default.GetService<ILocalSettingsService>()
                          .ReadSettingAsync<ComboxItemModel>(Constants.DefaultChatBotNameKey))?.DataKey;
 
                     if (string.IsNullOrEmpty(chatBotClientName))
@@ -517,7 +517,7 @@ public partial class MainViewModel : ObservableRecipient, INavigationAware
         {
             WindowEx compactOverlay = new CompactOverlayWindow();
 
-            compactOverlay.Content = App.GetService<ModelLoadCompactOverlayPage>();
+            compactOverlay.Content = Ioc.Default.GetService<ModelLoadCompactOverlayPage>();
 
             var appWindow = compactOverlay.AppWindow;
 
@@ -591,7 +591,7 @@ public partial class MainViewModel : ObservableRecipient, INavigationAware
         {
             var r = new Random().Next(Constants.POTENTIAL_EMOJI_LIST.Count);
 
-            var mediaPlayer = App.GetService<MediaPlayer>();
+            var mediaPlayer = Ioc.Default.GetService<MediaPlayer>();
 
             mediaPlayer.MediaEnded += MediaPlayer_MediaEnded;
 
@@ -653,7 +653,7 @@ public partial class MainViewModel : ObservableRecipient, INavigationAware
         {
             try
             {
-                var canvasDevice = App.GetService<CanvasDevice>();
+                var canvasDevice = Ioc.Default.GetService<CanvasDevice>();
 
                 if (frameServerDest == null)
                 {
@@ -695,7 +695,7 @@ public partial class MainViewModel : ObservableRecipient, INavigationAware
 
         if (!string.IsNullOrWhiteSpace(clockName))
         {
-            var service = App.GetService<EmoticonActionFrameService>();
+            var service = Ioc.Default.GetService<EmoticonActionFrameService>();
 
             service.ClearQueue();
 
@@ -818,7 +818,7 @@ public partial class MainViewModel : ObservableRecipient, INavigationAware
     {
         var radioButtons = (RadioButtons)sender;
 
-        var service = App.GetService<EmoticonActionFrameService>();
+        var service = Ioc.Default.GetService<EmoticonActionFrameService>();
 
         service.ClearQueue();
 
@@ -1177,7 +1177,7 @@ public partial class MainViewModel : ObservableRecipient, INavigationAware
 
                     var frame = new EmoticonActionFrame(data, true);
 
-                    var service = App.GetService<EmoticonActionFrameService>();
+                    var service = Ioc.Default.GetService<EmoticonActionFrameService>();
 
                     service.ClearQueue();
 

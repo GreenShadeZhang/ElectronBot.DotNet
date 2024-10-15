@@ -28,7 +28,7 @@ public sealed partial class AddEmojisContentDialog : ContentDialog
     }
     public AddEmojisContentDialog()
     {
-        ViewModel = App.GetService<AddEmojisDialogViewModel>();
+        ViewModel = Ioc.Default.GetService<AddEmojisDialogViewModel>();
 
         DataContext = ViewModel;
 

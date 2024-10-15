@@ -27,7 +27,7 @@ public sealed partial class ActionTimeline : UserControl
 
     public ActionTimeline()
     {
-        ViewModel = App.GetService<MainViewModel>();
+        ViewModel = Ioc.Default.GetService<MainViewModel>();
 
         InitializeComponent();
     }

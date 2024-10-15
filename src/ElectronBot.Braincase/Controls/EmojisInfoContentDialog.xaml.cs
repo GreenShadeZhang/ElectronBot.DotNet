@@ -30,7 +30,7 @@ public sealed partial class EmojisInfoContentDialog : ContentDialog
     }
     public EmojisInfoContentDialog()
     {
-        ViewModel = App.GetService<EmojisInfoDialogViewModel>();
+        ViewModel = Ioc.Default.GetService<EmojisInfoDialogViewModel>();
 
         DataContext = ViewModel;
 

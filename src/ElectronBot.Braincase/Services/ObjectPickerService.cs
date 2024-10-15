@@ -10,7 +10,7 @@ public class ObjectPickerService
     {
         Type? page = Type.GetType(pageKey);
 
-        var picker = App.GetService<ObjectPicker<T>>();
+        var picker = Ioc.Default.GetService<ObjectPicker<T>>();
 
         //var picker = new ObjectPicker<T>(service);
 

@@ -20,7 +20,7 @@ public class DefaultActionExpressionProvider : IActionExpressionProvider
 
         var capture = new VideoCapture(Package.Current.InstalledLocation.Path + $"\\Assets\\Emoji\\{actionName}.mp4");
 
-        var service = App.GetService<EmoticonActionFrameService>();
+        var service = Ioc.Default.GetService<EmoticonActionFrameService>();
 
         service.ClearQueue();
 
@@ -65,7 +65,7 @@ public class DefaultActionExpressionProvider : IActionExpressionProvider
 
         var currentAction = new ElectronBotAction();
 
-        var service = App.GetService<EmoticonActionFrameService>();
+        var service = Ioc.Default.GetService<EmoticonActionFrameService>();
 
         service.ClearQueue();
 
@@ -131,7 +131,7 @@ public class DefaultActionExpressionProvider : IActionExpressionProvider
                 _ = await service.SendToUsbDeviceAsync(frameData);
 
                 //通过grpc通讯和树莓派传输数据 
-                //var grpcClient = App.GetService<EbGrpcService>();
+                //var grpcClient = Ioc.Default.GetService<EbGrpcService>();
 
                 //await grpcClient.PlayEmoticonActionFrameAsync(frameData);
             }
@@ -160,7 +160,7 @@ public class DefaultActionExpressionProvider : IActionExpressionProvider
 
         var currentAction = new ElectronBotAction();
 
-        var service = App.GetService<EmoticonActionFrameService>();
+        var service = Ioc.Default.GetService<EmoticonActionFrameService>();
 
         service.ClearQueue();
 
@@ -238,7 +238,7 @@ public class DefaultActionExpressionProvider : IActionExpressionProvider
                 _ = await service.SendToUsbDeviceAsync(frameData);
 
                 //通过grpc通讯和树莓派传输数据 
-                //var grpcClient = App.GetService<EbGrpcService>();
+                //var grpcClient = Ioc.Default.GetService<EbGrpcService>();
 
                 //await grpcClient.PlayEmoticonActionFrameAsync(frameData);
             }
@@ -297,7 +297,7 @@ public class DefaultActionExpressionProvider : IActionExpressionProvider
 
         //var actionsList = new List<EmoticonActionFrame>();
 
-        var service = App.GetService<EmoticonActionFrameService>();
+        var service = Ioc.Default.GetService<EmoticonActionFrameService>();
 
         service.ClearQueue();
 
@@ -357,7 +357,7 @@ public class DefaultActionExpressionProvider : IActionExpressionProvider
                         //actionsList.Add(frameData);
 
                         //通过grpc通讯和树莓派传输数据 
-                        //var grpcClient = App.GetService<EbGrpcService>();
+                        //var grpcClient = Ioc.Default.GetService<EbGrpcService>();
 
                         //await grpcClient.PlayEmotionActionFrameAsync(frameData);
                     }
@@ -369,7 +369,7 @@ public class DefaultActionExpressionProvider : IActionExpressionProvider
             }
         }
 
-        //var grpcClient = App.GetService<EbGrpcService>();
+        //var grpcClient = Ioc.Default.GetService<EbGrpcService>();
 
         //await grpcClient.PlayEmotionActionFramesAsync(actionsList);
     }

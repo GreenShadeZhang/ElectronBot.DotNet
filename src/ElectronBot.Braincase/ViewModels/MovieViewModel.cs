@@ -676,7 +676,7 @@ public partial class MovieViewModel : ObservableRecipient
         _importer.Dispose();
 
         CameraFrameService.Current.SoftwareBitmapFramePosePredictResult -= Current_SoftwareBitmapFramePosePredictResult;
-        var service = App.GetService<EmoticonActionFrameService>();
+        var service = Ioc.Default.GetService<EmoticonActionFrameService>();
         service.ClearQueue();
         await CleanUpAsync();
 

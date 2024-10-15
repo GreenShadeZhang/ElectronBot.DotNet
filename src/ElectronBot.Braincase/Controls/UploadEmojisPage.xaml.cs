@@ -36,7 +36,7 @@ public sealed partial class UploadEmojisPage : Page
     }
     public UploadEmojisPage()
     {
-        ViewModel = App.GetService<UploadEmojisDialogViewModel>();
+        ViewModel = Ioc.Default.GetService<UploadEmojisDialogViewModel>();
 
         DataContext = ViewModel;
 

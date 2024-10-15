@@ -24,7 +24,7 @@ public class Bot3DHelper
 
     public Bot3DHelper()
     {
-        EffectsManager = App.GetService<IEffectsManager>();
+        EffectsManager = Ioc.Default.GetService<IEffectsManager>();
 
         Material = new DiffuseMaterial()
         {

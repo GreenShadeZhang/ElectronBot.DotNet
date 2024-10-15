@@ -36,7 +36,7 @@ public sealed partial class HiddenTextView : UserControl
         this.InitializeComponent();
         //this.Loaded += HiddenTextView_Loaded;
 
-        ViewModel = App.GetService<ClockViewModel>();
+        ViewModel = Ioc.Default.GetService<ClockViewModel>();
 
         ShowTextShimmingAsync();
         CreateBackgroundLight();

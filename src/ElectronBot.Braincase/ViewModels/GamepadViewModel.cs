@@ -196,7 +196,7 @@ public class GamepadViewModel : ObservableRecipient, INavigationAware
                 isHoldRightThumbstick = true;
                 Debug.Write($"send emojis---{DateTime.Now.ToString()}");
 
-                var list = (await App.GetService<ILocalSettingsService>()
+                var list = (await Ioc.Default.GetService<ILocalSettingsService>()
                   .ReadSettingAsync<List<EmoticonAction>>(Constants.EmojisActionListKey)) ?? new List<EmoticonAction>();
 
                 if (list != null && list.Count > 0)
@@ -217,7 +217,7 @@ public class GamepadViewModel : ObservableRecipient, INavigationAware
                     }
                     _ = ElectronBotHelper.Instance.MediaPlayerPlaySoundAsync(videoPath);
 
-                    await App.GetService<IActionExpressionProvider>().PlayActionExpressionAsync(action);
+                    await Ioc.Default.GetService<IActionExpressionProvider>().PlayActionExpressionAsync(action);
                 }
             }
             else if (reading.Buttons.HasFlag(GamepadButtons.A) && isHoldRightThumbstick == true)

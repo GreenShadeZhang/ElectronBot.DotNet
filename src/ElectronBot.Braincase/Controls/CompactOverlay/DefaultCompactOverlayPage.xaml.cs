@@ -37,6 +37,6 @@ public sealed partial class DefaultCompactOverlayPage : Page
     {
         this.InitializeComponent();
 
-        ViewModel = App.GetService<TodoCompactOverlayViewModel>();
+        ViewModel = Ioc.Default.GetService<TodoCompactOverlayViewModel>();
     }
 }

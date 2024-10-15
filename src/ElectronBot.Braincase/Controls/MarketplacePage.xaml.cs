@@ -34,7 +34,7 @@ public sealed partial class MarketplacePage : Page
 
     public MarketplacePage()
     {
-        ViewModel = App.GetService<MarketplaceViewModel>();
+        ViewModel = Ioc.Default.GetService<MarketplaceViewModel>();
         this.InitializeComponent();
     }
 

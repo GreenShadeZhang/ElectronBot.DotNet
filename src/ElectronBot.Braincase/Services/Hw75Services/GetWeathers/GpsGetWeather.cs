@@ -47,9 +47,9 @@ public class GpsGetWeather
             var uri = new Uri(urlLast);
             var resultJson = string.Empty;
 
-            var appCode = App.GetService<IOptions<LocalSettingsOptions>>().Value.Hw75AppCode;
+            var appCode = Ioc.Default.GetService<IOptions<LocalSettingsOptions>>().Value.Hw75AppCode;
 
-            var _localSettingsService = App.GetService<ILocalSettingsService>();
+            var _localSettingsService = Ioc.Default.GetService<ILocalSettingsService>();
             var config = await _localSettingsService.ReadSettingAsync<CustomClockTitleConfig>(Constants.CustomClockTitleConfigKey) ?? new CustomClockTitleConfig();
 
             if (!string.IsNullOrWhiteSpace(config.Hw75WeatherAppCode))

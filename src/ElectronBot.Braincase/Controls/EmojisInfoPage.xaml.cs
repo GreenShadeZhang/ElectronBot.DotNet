@@ -35,7 +35,7 @@ public sealed partial class EmojisInfoPage : Page
     }
     public EmojisInfoPage()
     {
-        ViewModel = App.GetService<EmojisInfoDialogViewModel>();
+        ViewModel = Ioc.Default.GetService<EmojisInfoDialogViewModel>();
 
         DataContext = ViewModel;
 

@@ -193,7 +193,7 @@ class CameraService
             return;
         }
 
-        var setting = App.GetService<ILocalSettingsService>();
+        var setting = Ioc.Default.GetService<ILocalSettingsService>();
 
         var saveCamera = await setting.ReadSettingAsync<ComboxItemModel>(Constants.DefaultCameraNameKey);
 

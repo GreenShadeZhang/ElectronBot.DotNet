@@ -790,7 +790,7 @@ public partial class GestureInteractionViewModel : ObservableRecipient
                 e.SoftwareBitmap = SoftwareBitmap.Convert(
                     e.SoftwareBitmap, BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied);
             }
-            var service = App.GetService<GestureClassificationService>();
+            var service = Ioc.Default.GetService<GestureClassificationService>();
 
             _ = service.HandPredictResultUnUseQueueAsync(calculator, _modelPath, e.SoftwareBitmap);
         }
@@ -810,7 +810,7 @@ public partial class GestureInteractionViewModel : ObservableRecipient
         CameraFrameService.Current.SoftwareBitmapFrameCaptured -= Current_SoftwareBitmapFrameCaptured;
 
         CameraFrameService.Current.SoftwareBitmapFrameHandPredictResult -= Current_SoftwareBitmapFrameHandPredictResult;
-        var service = App.GetService<EmoticonActionFrameService>();
+        var service = Ioc.Default.GetService<EmoticonActionFrameService>();
         service.ClearQueue();
         await CleanUpAsync();
     }

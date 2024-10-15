@@ -31,7 +31,7 @@ namespace Hw75Views
         {
             this.InitializeComponent();
 
-            ViewModel = App.GetService<Hw75WeatherViewModel>();
+            ViewModel = Ioc.Default.GetService<Hw75WeatherViewModel>();
         }
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)

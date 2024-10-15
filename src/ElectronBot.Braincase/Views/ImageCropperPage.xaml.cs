@@ -23,7 +23,7 @@ public sealed partial class ImageCropperPage : Page
     }
     public ImageCropperPage()
     {
-        ViewModel = App.GetService<ImageCropperPickerViewModel>();
+        ViewModel = Ioc.Default.GetService<ImageCropperPickerViewModel>();
 
         DataContext = ViewModel;
 

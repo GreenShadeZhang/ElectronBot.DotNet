@@ -56,12 +56,12 @@ public class ActivationService : IActivationService
 
             if (customConfig.Hw75IsOpen)
             {
-                _shell = App.GetService<Hw75ShellPage>();
+                _shell = Ioc.Default.GetService<Hw75ShellPage>();
                 App.MainWindow.Content = _shell ?? new Frame();
             }
             else
             {
-                _shell = App.GetService<ShellPage>();
+                _shell = Ioc.Default.GetService<ShellPage>();
                 App.MainWindow.Content = _shell ?? new Frame();
             }
         }

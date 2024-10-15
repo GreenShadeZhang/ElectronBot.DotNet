@@ -190,7 +190,7 @@ public class UploadEmojisDialogViewModel : ObservableRecipient
 
         EmoticonAction.EmojisActionPath = storageFile.Path;
 
-        var eshopService = App.GetService<IEmojiseShopService>();
+        var eshopService = Ioc.Default.GetService<IEmojiseShopService>();
 
         var ret = await eshopService.UploadEmojisAsync(EmoticonAction);
     }

@@ -113,7 +113,7 @@ public partial class AddEmojisDialogViewModel : ObservableRecipient
     {
         try
         {
-            var theme = App.GetService<IThemeSelectorService>();
+            var theme = Ioc.Default.GetService<IThemeSelectorService>();
             var addEmojisContentDialog = new AddEmojisContentDialog
             {
                 Title = "AddEmojisTitle".GetLocalized(),

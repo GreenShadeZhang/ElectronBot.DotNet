@@ -350,7 +350,7 @@ public partial class ElectronBot3DViewModel : ObservableRecipient
         EffectsManager.Dispose();
         _importer.Dispose();
 
-        var service = App.GetService<EmoticonActionFrameService>();
+        var service = Ioc.Default.GetService<EmoticonActionFrameService>();
         service.ClearQueue();
     }
 

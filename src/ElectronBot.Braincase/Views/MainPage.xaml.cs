@@ -16,7 +16,7 @@ public sealed partial class MainPage : Page
 
     public MainPage()
     {
-        ViewModel = App.GetService<MainViewModel>();
+        ViewModel = Ioc.Default.GetService<MainViewModel>();
 
         InitializeComponent();
     }

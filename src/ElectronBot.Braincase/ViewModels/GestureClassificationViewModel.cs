@@ -199,7 +199,7 @@ public partial class GestureClassificationViewModel : ObservableRecipient, INavi
     {
         try
         {
-            var theme = App.GetService<IThemeSelectorService>();
+            var theme = Ioc.Default.GetService<IThemeSelectorService>();
             var randomContentEditDialog = new ContentDialog()
             {
                 Title = "AddRandomContentTitle".GetLocalized(),
@@ -264,7 +264,7 @@ public partial class GestureClassificationViewModel : ObservableRecipient, INavi
             {
                 if (e == "back" && _isBeginning == false)
                 {
-                    var service = App.GetService<EmoticonActionFrameService>();
+                    var service = Ioc.Default.GetService<EmoticonActionFrameService>();
                     service.ClearQueue();
                     //todo：启动动画 并播放 
                     _isBeginning = true;
@@ -302,7 +302,7 @@ public partial class GestureClassificationViewModel : ObservableRecipient, INavi
                 e.SoftwareBitmap = SoftwareBitmap.Convert(
                     e.SoftwareBitmap, BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied);
             }
-            var service = App.GetService<GestureClassificationService>();
+            var service = Ioc.Default.GetService<GestureClassificationService>();
 
             _ = service.HandPredictResultUnUseQueueAsync(calculator, modelPath, e.SoftwareBitmap);
         }
@@ -312,7 +312,7 @@ public partial class GestureClassificationViewModel : ObservableRecipient, INavi
         CameraFrameService.Current.SoftwareBitmapFrameCaptured -= Current_SoftwareBitmapFrameCaptured;
 
         CameraFrameService.Current.SoftwareBitmapFrameHandPredictResult -= Current_SoftwareBitmapFrameHandPredictResult;
-        var service = App.GetService<EmoticonActionFrameService>();
+        var service = Ioc.Default.GetService<EmoticonActionFrameService>();
         service.ClearQueue();
         await CleanUpAsync();
         dispatcherTimer.Stop();

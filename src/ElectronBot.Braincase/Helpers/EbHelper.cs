@@ -209,7 +209,7 @@ public class EbHelper
     /// <returns></returns>
     public static async Task PlayActionListAsync(List<ElectronBotAction> actions, int interval = 500)
     {
-        var service = App.GetService<EmoticonActionFrameService>();
+        var service = Ioc.Default.GetService<EmoticonActionFrameService>();
 
         service.ClearQueue();
 
@@ -296,7 +296,7 @@ public class EbHelper
             var frame = new EmoticonActionFrame(data, frameData.Enable,
                 frameData.J1, frameData.J2, frameData.J3, frameData.J4, frameData.J5, frameData.J6);
 
-            var service = App.GetService<EmoticonActionFrameService>();
+            var service = Ioc.Default.GetService<EmoticonActionFrameService>();
 
             ElectronBotHelper.Instance.ModelActionInvoke(
                 new ModelActionFrame(mat2.ToMemoryStream(),
@@ -348,7 +348,7 @@ public class EbHelper
 
             var frame = new EmoticonActionFrame(data);
 
-            var service = App.GetService<EmoticonActionFrameService>();
+            var service = Ioc.Default.GetService<EmoticonActionFrameService>();
 
             ElectronBotHelper.Instance.ModelActionInvoke(new ModelActionFrame(mat2.ToMemoryStream()));
 
@@ -365,7 +365,7 @@ public class EbHelper
     public static async Task ShowClockCanvasToDeviceAsync(UIElement element)
     {
         var data = await SetClockUiToFrameAsync(element);
-        var service = App.GetService<EmoticonActionFrameService>();
+        var service = Ioc.Default.GetService<EmoticonActionFrameService>();
         _ = await service.SendToUsbDeviceAsync(data);
     }
 
@@ -431,7 +431,7 @@ public class EbHelper
         //});
         //return Task.CompletedTask;
 
-        var service = App.GetService<EmoticonActionFrameService>();
+        var service = Ioc.Default.GetService<EmoticonActionFrameService>();
         _ = await service.SendToUsbDeviceAsync(data);
     }
 
@@ -451,7 +451,7 @@ public class EbHelper
 
             var pixels = await bitmap.GetPixelsAsync();
 
-            //var canvasDevice = App.GetService<CanvasDevice>();
+            //var canvasDevice = Ioc.Default.GetService<CanvasDevice>();
             // Transfer the pixel data from XAML to Win2D for further processing.
             using var canvasDevice = new CanvasDevice();
 

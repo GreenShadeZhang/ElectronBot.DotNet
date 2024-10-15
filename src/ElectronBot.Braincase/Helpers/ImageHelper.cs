@@ -42,7 +42,7 @@ public static class ImageHelper
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
 
-        var ret = await App.GetService<ObjectPickerService>()
+        var ret = await Ioc.Default.GetService<ObjectPickerService>()
             .PickSingleObjectAsync<WriteableBitmap>
             (typeof(ImageCropperPickerViewModel).FullName!, config, startOption);
 

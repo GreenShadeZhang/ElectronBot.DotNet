@@ -30,7 +30,7 @@ namespace Hw75Views
         {
             this.InitializeComponent();
 
-            ViewModel = App.GetService<Hw75CustomViewModel>();
+            ViewModel = Ioc.Default.GetService<Hw75CustomViewModel>();
         }
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)

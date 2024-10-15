@@ -11,6 +11,6 @@ public class Hw75DynamicWeatherViewProvider : IHw75DynamicViewProvider
 
     public UIElement CreateHw75DynamickView(string viewName)
     {
-        return App.GetService<Hw75WeatherView>();
+        return Ioc.Default.GetService<Hw75WeatherView>();
     }
 }

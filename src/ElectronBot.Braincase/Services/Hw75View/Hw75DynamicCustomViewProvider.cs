@@ -11,6 +11,6 @@ public class Hw75DynamicCustomViewProvider : IHw75DynamicViewProvider
 
     public UIElement CreateHw75DynamickView(string viewName)
     {
-        return App.GetService<Hw75CustomView>();
+        return Ioc.Default.GetService<Hw75CustomView>();
     }
 }

@@ -30,7 +30,7 @@ public sealed partial class GamepadPage : Page
 
     public GamepadPage()
     {
-        ViewModel = App.GetService<GamepadViewModel>();
+        ViewModel = Ioc.Default.GetService<GamepadViewModel>();
         InitializeComponent();
     }
 }

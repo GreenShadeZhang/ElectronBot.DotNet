@@ -28,7 +28,7 @@ public sealed partial class ElectronBotModelLoader : UserControl
     public ElectronBotModelLoader()
     {
         this.InitializeComponent();
-        ViewModel = App.GetService<ModelLoadCompactOverlayViewModel>();
+        ViewModel = Ioc.Default.GetService<ModelLoadCompactOverlayViewModel>();
     }
 
     private void ModelLoadCompactOverlayPage_OnLoaded(object sender, RoutedEventArgs e)

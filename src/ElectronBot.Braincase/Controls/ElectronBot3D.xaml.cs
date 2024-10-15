@@ -18,7 +18,7 @@ public sealed partial class ElectronBot3D : UserControl
     public ElectronBot3D()
     {
         this.InitializeComponent();
-        ViewModel = App.GetService<ElectronBot3DViewModel>();
+        ViewModel = Ioc.Default.GetService<ElectronBot3DViewModel>();
     }
 
     private async void UserControl_Loading(Microsoft.UI.Xaml.FrameworkElement sender, object args)
