@@ -1,4 +1,10 @@
-﻿using Contracts.Services;
+﻿using BotSharp.Abstraction.Messaging.JsonConverters;
+using BotSharp.Abstraction.Repositories;
+using BotSharp.Abstraction.Users;
+using BotSharp.Core;
+using BotSharp.Core.Users.Services;
+using BotSharp.Logger;
+using Contracts.Services;
 using Controls;
 using Controls.CompactOverlay;
 using ElectronBot.Braincase.Activation;
@@ -10,6 +16,7 @@ using ElectronBot.Braincase.Picker;
 using ElectronBot.Braincase.Services;
 using ElectronBot.Braincase.ViewModels;
 using ElectronBot.Braincase.Views;
+using ElectronBot.Copilot.ViewModels;
 using ElectronBot.DotNet;
 using ElectronBot.DotNet.LibUsb;
 using ElectronBot.DotNet.WinUsb;
@@ -27,12 +34,22 @@ using Verdure.ElectronBot.Core.Services;
 using ViewModels;
 using Views;
 using Windows.Media.Playback;
+using Windows.Storage;
 
 namespace ElectronBot.Braincase;
 public static class ConfigureServicesExtensions
 {
     public static void AddServices(this IServiceCollection services, IConfiguration config)
     {
+        var dbSettings = new BotSharpDatabaseSettings();
+        config.Bind("Database", dbSettings);
+
+        var destinationFolder = KnownFolders.PicturesLibrary
+            .CreateFolderAsync("ElectronBot", CreationCollisionOption.OpenIfExists).GetAwaiter().GetResult();
+
+        dbSettings.BotSharpLiteDB = Path.Combine(destinationFolder.Path, "ElectronBot.db");
+
+
         var canvasDevice = CanvasDevice.GetSharedDevice();
         services.Configure<LocalSettingsOptions>(config.GetSection(nameof(LocalSettingsOptions)));
         // Register 
@@ -228,6 +245,19 @@ public static class ConfigureServicesExtensions
             //})
 
             .AddSingleton<Services.EbotGrpcService.EbGrpcService>()
+
+            // add botsharp
+            .AddTransient<AgentViewModel>()
+            .AddTransient<AgentPage>()
+            .AddSingleton(dbSettings)
+            .AddBotSharpCore(config, options =>
+            {
+                options.JsonSerializerOptions.Converters.Add(new RichContentJsonConverter());
+                options.JsonSerializerOptions.Converters.Add(new TemplateMessageJsonConverter());
+            })
+            .AddHttpContextAccessor()
+            .AddScoped<IUserIdentity, UserIdentity>()
+            .AddBotSharpLogger(config)
             // Configuration
             .BuildServiceProvider());
     }

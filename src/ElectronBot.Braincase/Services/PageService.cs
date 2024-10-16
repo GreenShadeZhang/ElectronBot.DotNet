@@ -3,7 +3,7 @@
 using ElectronBot.Braincase.Contracts.Services;
 using ElectronBot.Braincase.ViewModels;
 using ElectronBot.Braincase.Views;
-
+using ElectronBot.Copilot.ViewModels;
 using Microsoft.UI.Xaml.Controls;
 using ViewModels;
 using Views;
@@ -31,6 +31,8 @@ public class PageService : IPageService
         Configure<MovieViewModel,MoviePage>();
         Configure<GestureAppConfigViewModel, GestureAppConfigPage>();
         Configure<Hw75ViewModel, Hw75Page>();
+
+        Configure<AgentViewModel, AgentPage>();
     }
 
     public Type GetPageType(string key)

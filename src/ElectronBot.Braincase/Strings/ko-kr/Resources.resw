@@ -897,4 +897,7 @@
   <data name="GrooveView" xml:space="preserve">
     <value>律动表盘</value>
   </data>
+  <data name="AgentPage.Content" xml:space="preserve">
+    <value>智能体</value>
+  </data>
 </root>

@@ -1,37 +1,13 @@
-﻿using Contracts.Services;
-using Controls;
-using Controls.CompactOverlay;
-using ElectronBot.Braincase.Activation;
-using ElectronBot.Braincase.ClockViews;
+﻿using Controls;
 using ElectronBot.Braincase.Contracts.Services;
 using ElectronBot.Braincase.Helpers;
-using ElectronBot.Braincase.Models;
-using ElectronBot.Braincase.Notifications;
-using ElectronBot.Braincase.Picker;
 using ElectronBot.Braincase.Services;
-using ElectronBot.Braincase.ViewModels;
-using ElectronBot.Braincase.Views;
-using ElectronBot.DotNet;
-using ElectronBot.DotNet.LibUsb;
-using ElectronBot.DotNet.WinUsb;
-using HelixToolkit.SharpDX.Core;
-using HelloWordKeyboard.DotNet;
 using HidApi;
-using Hw75Views;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Graphics.Canvas;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media.Imaging;
 using Services;
-using Verdure.ElectronBot.Core.Contracts.Services;
-using Verdure.ElectronBot.Core.Services;
-using Verdure.ElectronBot.GrpcService;
-using ViewModels;
-using Views;
-using Windows.Media.Playback;
 
 namespace ElectronBot.Braincase;
 
@@ -75,14 +51,14 @@ public partial class App : Application
     {
         InitializeComponent();
 
-        
+
 
         Host = Microsoft.Extensions.Hosting.Host.
         CreateDefaultBuilder().
         UseContentRoot(AppContext.BaseDirectory).
         ConfigureServices((context, services) =>
         {
-            services.AddServices(context.Configuration);
+           services.AddServices(context.Configuration);
         }).
         Build();
 
