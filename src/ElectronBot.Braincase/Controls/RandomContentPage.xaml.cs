@@ -22,7 +22,7 @@ namespace Controls
 
         public RandomContentPage()
         {
-            ViewModel = Ioc.Default.GetService<RandomContentViewModel>();
+            ViewModel = Ioc.Default.GetRequiredService<RandomContentViewModel>();
             this.InitializeComponent();
         }
     }

@@ -86,7 +86,7 @@ public partial class App : Application
         }).
         Build();
 
-        Ioc.Default.GetService<IAppNotificationService>().Initialize();
+        Ioc.Default.GetRequiredService<IAppNotificationService>().Initialize();
 
         UnhandledException += App_UnhandledException;
     }
@@ -98,7 +98,7 @@ public partial class App : Application
 
         ElectronBotHelper.Instance.InvokeClockCanvasStop();
 
-        var service = Ioc.Default.GetService<EmoticonActionFrameService>();
+        var service = Ioc.Default.GetRequiredService<EmoticonActionFrameService>();
 
         service.ClearQueue();
 
@@ -116,16 +116,16 @@ public partial class App : Application
         base.OnLaunched(args);
 
         MainWindow.AppWindow.Closing += AppWindow_Closing;
-        //Ioc.Default.GetService<IAppNotificationService>().Show(string.Format("AppNotificationSamplePayload".GetLocalized(), AppContext.BaseDirectory));
+        //Ioc.Default.GetRequiredService<IAppNotificationService>().Show(string.Format("AppNotificationSamplePayload".GetLocalized(), AppContext.BaseDirectory));
 
-        await Ioc.Default.GetService<IActivationService>().ActivateAsync(args);
+        await Ioc.Default.GetRequiredService<IActivationService>().ActivateAsync(args);
     }
 
     private async void AppWindow_Closing(AppWindow sender, AppWindowClosingEventArgs args)
     {
         args.Cancel = true;
 
-        var theme = Ioc.Default.GetService<IThemeSelectorService>();
+        var theme = Ioc.Default.GetRequiredService<IThemeSelectorService>();
 
         var dialog = new ContentDialog
         {
@@ -149,7 +149,7 @@ public partial class App : Application
             {
                 ElectronBotHelper.Instance.InvokeClockCanvasStop();
 
-                var service = Ioc.Default.GetService<EmoticonActionFrameService>();
+                var service = Ioc.Default.GetRequiredService<EmoticonActionFrameService>();
 
                 service.ClearQueue();
 

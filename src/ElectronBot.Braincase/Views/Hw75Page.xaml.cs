@@ -31,7 +31,7 @@ public sealed partial class Hw75Page : Page
 
     public Hw75Page()
     {
-        ViewModel = Ioc.Default.GetService<Hw75ViewModel>();
+        ViewModel = Ioc.Default.GetRequiredService<Hw75ViewModel>();
 
         InitializeComponent();
     }

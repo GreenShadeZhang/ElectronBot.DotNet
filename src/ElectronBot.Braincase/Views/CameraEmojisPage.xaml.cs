@@ -29,7 +29,7 @@ public sealed partial class CameraEmojisPage : Page
     }
     public CameraEmojisPage()
     {
-        ViewModel = Ioc.Default.GetService<CameraEmojisViewModel>();
+        ViewModel = Ioc.Default.GetRequiredService<CameraEmojisViewModel>();
 
         InitializeComponent();
     }

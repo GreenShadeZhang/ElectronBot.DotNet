@@ -34,7 +34,7 @@ public sealed partial class AddEmojisPage : Page
     }
     public AddEmojisPage()
     {
-        ViewModel = Ioc.Default.GetService<AddEmojisDialogViewModel>();
+        ViewModel = Ioc.Default.GetRequiredService<AddEmojisDialogViewModel>();
 
         DataContext = ViewModel;
 

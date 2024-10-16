@@ -58,7 +58,7 @@ namespace ClockViews
         public GradientsWithBlend()
         {
             InitializeComponent();
-            ViewModel = Ioc.Default.GetService<ClockViewModel>();
+            ViewModel = Ioc.Default.GetRequiredService<ClockViewModel>();
 
             Visual hostVisual = ElementCompositionPreview.GetElementVisual(this);
             _compositor = hostVisual.Compositor;

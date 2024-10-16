@@ -32,7 +32,7 @@ public sealed partial class GooeyFooter : UserControl
     public GooeyFooter()
     {
         InitializeComponent();
-        ViewModel = Ioc.Default.GetService<ClockViewModel>();
+        ViewModel = Ioc.Default.GetRequiredService<ClockViewModel>();
         var easingFunction = new ExponentialEase { EasingMode = EasingMode.EaseInOut };
         _bubbles = new List<GooeyBubble>();
         var unit = 16;

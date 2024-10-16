@@ -23,7 +23,7 @@ public sealed partial class VisionPage : Page
     }
     public VisionPage()
     {
-        ViewModel = Ioc.Default.GetService<VisionViewModel>();
+        ViewModel = Ioc.Default.GetRequiredService<VisionViewModel>();
 
         this.InitializeComponent();
 
@@ -36,7 +36,7 @@ public sealed partial class VisionPage : Page
         if (availableFrameSourceGroups != null)
         {
             MediaFrameSourceGroup? camera = null;
-            var setting = Ioc.Default.GetService<ILocalSettingsService>();
+            var setting = Ioc.Default.GetRequiredService<ILocalSettingsService>();
             var saveCamera = await setting.ReadSettingAsync<ComboxItemModel>(Constants.DefaultCameraNameKey);
             if (saveCamera != null)
             {

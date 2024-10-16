@@ -34,7 +34,7 @@ public sealed partial class ModelLoadCompactOverlayPage : Page
     public ModelLoadCompactOverlayPage()
     {
         this.InitializeComponent();
-        ViewModel = Ioc.Default.GetService<ModelLoadCompactOverlayViewModel>();
+        ViewModel = Ioc.Default.GetRequiredService<ModelLoadCompactOverlayViewModel>();
     }
 
     private void ModelLoadCompactOverlayPage_OnLoaded(object sender, RoutedEventArgs e)

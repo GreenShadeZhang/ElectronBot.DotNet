@@ -53,7 +53,7 @@ public class NavigationViewHeaderBehavior : Behavior<NavigationView>
     {
         base.OnAttached();
 
-        var navigationService = Ioc.Default.GetService<INavigationService>();
+        var navigationService = Ioc.Default.GetRequiredService<INavigationService>();
         navigationService.Navigated += OnNavigated;
 
         _current = this;
@@ -63,7 +63,7 @@ public class NavigationViewHeaderBehavior : Behavior<NavigationView>
     {
         base.OnDetaching();
 
-        var navigationService = Ioc.Default.GetService<INavigationService>();
+        var navigationService = Ioc.Default.GetRequiredService<INavigationService>();
         navigationService.Navigated -= OnNavigated;
     }
 

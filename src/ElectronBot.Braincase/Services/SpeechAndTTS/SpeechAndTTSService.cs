@@ -289,15 +289,15 @@ public class SpeechAndTTSService : ISpeechAndTTSService
             {
                 try
                 {
-                    //var chatGPTClient = Ioc.Default.GetService<IChatGPTService>();
+                    //var chatGPTClient = Ioc.Default.GetRequiredService<IChatGPTService>();
 
                     //var resultText = await chatGPTClient.AskQuestionResultAsync(args.Result.Text);
 
                     //await ElectronBotHelper.Instance.MediaPlayerPlaySoundByTTSAsync(resultText);
 
-                    var chatBotClientFactory = Ioc.Default.GetService<IChatbotClientFactory>();
+                    var chatBotClientFactory = Ioc.Default.GetRequiredService<IChatbotClientFactory>();
 
-                    var chatBotClientName = (await Ioc.Default.GetService<ILocalSettingsService>()
+                    var chatBotClientName = (await Ioc.Default.GetRequiredService<ILocalSettingsService>()
                          .ReadSettingAsync<ComboxItemModel>(Constants.DefaultChatBotNameKey))?.DataKey;
 
                     if (string.IsNullOrEmpty(chatBotClientName))

@@ -421,7 +421,7 @@ public partial class EmojisEditViewModel : ObservableRecipient
 
                 if (result == ContentDialogResult.Primary)
                 {
-                    var eshpService = Ioc.Default.GetService<IEmojiseShopService>();
+                    var eshpService = Ioc.Default.GetRequiredService<IEmojiseShopService>();
 
                     var ret = await eshpService.UploadEmojisAsync(emojis);
 

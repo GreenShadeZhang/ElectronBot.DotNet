@@ -17,7 +17,7 @@ public sealed partial class TodoView : UserControl
     {
         this.InitializeComponent();
 
-        ViewModel = Ioc.Default.GetService<Hw75DynamicViewModel>();
+        ViewModel = Ioc.Default.GetRequiredService<Hw75DynamicViewModel>();
     }
 
     private void UserControl_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)

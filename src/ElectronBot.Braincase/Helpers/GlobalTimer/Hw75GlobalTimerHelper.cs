@@ -36,7 +36,7 @@ public class Hw75GlobalTimerHelper
 
     public async Task UpdateTimerIntervalAsync()
     {
-        var _localSettingsService = Ioc.Default.GetService<ILocalSettingsService>();
+        var _localSettingsService = Ioc.Default.GetRequiredService<ILocalSettingsService>();
         var config = await _localSettingsService.ReadSettingAsync<CustomClockTitleConfig>(Constants.CustomClockTitleConfigKey) ?? new CustomClockTitleConfig();
 
         if (config.Hw75ViewName == Hw75ViewNameEnum.Hw75CustomViewName)
@@ -57,7 +57,7 @@ public class Hw75GlobalTimerHelper
     {
         try
         {
-            var _localSettingsService = Ioc.Default.GetService<ILocalSettingsService>();
+            var _localSettingsService = Ioc.Default.GetRequiredService<ILocalSettingsService>();
             var config = await _localSettingsService.ReadSettingAsync<CustomClockTitleConfig>(Constants.CustomClockTitleConfigKey) ?? new CustomClockTitleConfig();
 
             var byteArray = Array.Empty<byte>();
@@ -75,7 +75,7 @@ public class Hw75GlobalTimerHelper
                 byteArray = await GetHw75YellowCalendarImageAsync(config);
             }
 
-            var device = Ioc.Default.GetService<IHw75DynamicDevice>();
+            var device = Ioc.Default.GetRequiredService<IHw75DynamicDevice>();
 
             _ = device.SetEInkImage(byteArray, 0, 0, 128, 296, false);
         }

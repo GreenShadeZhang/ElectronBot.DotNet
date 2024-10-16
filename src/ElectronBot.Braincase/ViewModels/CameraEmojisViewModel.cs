@@ -163,7 +163,7 @@ public partial class CameraEmojisViewModel : ObservableRecipient, INavigationAwa
 
     public async void OnNavigatedTo(object parameter)
     {
-        var service = Ioc.Default.GetService<EmoticonActionFrameService>();
+        var service = Ioc.Default.GetRequiredService<EmoticonActionFrameService>();
         service.ClearQueue();
         await InitAsync();
         ElectronBotHelper.Instance.IsEntityFirstEnabled = true;
@@ -171,7 +171,7 @@ public partial class CameraEmojisViewModel : ObservableRecipient, INavigationAwa
     public async void OnNavigatedFrom()
     {
 
-        var service = Ioc.Default.GetService<EmoticonActionFrameService>();
+        var service = Ioc.Default.GetRequiredService<EmoticonActionFrameService>();
         service.ClearQueue();
         await CleanUpAsync();
     }

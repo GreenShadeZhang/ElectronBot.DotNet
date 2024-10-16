@@ -90,7 +90,7 @@ public partial class Hw75ShellViewModel : ObservableRecipient
         {
             ElectronBotHelper.Instance.InvokeClockCanvasStop();
 
-            var service = Ioc.Default.GetService<EmoticonActionFrameService>();
+            var service = Ioc.Default.GetRequiredService<EmoticonActionFrameService>();
 
             service.ClearQueue();
 

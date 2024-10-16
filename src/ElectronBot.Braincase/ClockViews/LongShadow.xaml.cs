@@ -19,7 +19,7 @@ public sealed partial class LongShadow : UserControl
     {
         this.InitializeComponent();
 
-        ViewModel = Ioc.Default.GetService<ClockViewModel>();
+        ViewModel = Ioc.Default.GetRequiredService<ClockViewModel>();
 
         MakeLongShadow(188, 0.3f, InWorkCountDown, InworkBackground, Color.FromArgb(255, 250, 110, 93));
         MakeLongShadow(188, 0.3f, InWorkCountDownSecond, InworkSecondBackground, Color.FromArgb(255, 250, 110, 93));

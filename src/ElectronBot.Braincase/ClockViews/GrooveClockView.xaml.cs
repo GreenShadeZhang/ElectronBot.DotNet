@@ -30,7 +30,7 @@ public sealed partial class GrooveClockView : UserControl
     public GrooveClockView()
     {
         this.InitializeComponent();
-        ViewModel = Ioc.Default.GetService<ClockViewModel>();
+        ViewModel = Ioc.Default.GetRequiredService<ClockViewModel>();
         var spectrumAnalyzer = new SpectrumAnalyzer(canvas);
 
         spectrumAnalyzer.Start();

@@ -13,7 +13,7 @@ public sealed partial class EmojisEditPage : Page
 
     public EmojisEditPage()
     {
-        ViewModel = Ioc.Default.GetService<EmojisEditViewModel>();
+        ViewModel = Ioc.Default.GetRequiredService<EmojisEditViewModel>();
         InitializeComponent();
     }
 }

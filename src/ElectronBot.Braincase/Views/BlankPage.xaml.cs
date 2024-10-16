@@ -13,7 +13,7 @@ public sealed partial class BlankPage : Page
 
     public BlankPage()
     {
-        ViewModel = Ioc.Default.GetService<BlankViewModel>();
+        ViewModel = Ioc.Default.GetRequiredService<BlankViewModel>();
         InitializeComponent();
     }
 }

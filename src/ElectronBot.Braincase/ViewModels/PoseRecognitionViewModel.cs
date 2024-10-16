@@ -621,7 +621,7 @@ public partial class PoseRecognitionViewModel : ObservableRecipient
                         j1 = (headAngle / 180) * 15 * (-1);
                     }
 
-                    var canvasDevice = Ioc.Default.GetService<CanvasDevice>();
+                    var canvasDevice = Ioc.Default.GetRequiredService<CanvasDevice>();
 
                     if (_canvasImageSource == null)
                     {
@@ -680,7 +680,7 @@ public partial class PoseRecognitionViewModel : ObservableRecipient
                         e.SoftwareBitmap = SoftwareBitmap.Convert(
                             e.SoftwareBitmap, BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied);
                     }
-                    var service = Ioc.Default.GetService<PoseRecognitionService>();
+                    var service = Ioc.Default.GetRequiredService<PoseRecognitionService>();
 
                     _frameServerDest = e.SoftwareBitmap;
 
@@ -725,7 +725,7 @@ public partial class PoseRecognitionViewModel : ObservableRecipient
         CameraFrameService.Current.SoftwareBitmapFrameCaptured -= Current_SoftwareBitmapFrameCaptured;
 
         CameraFrameService.Current.SoftwareBitmapFramePosePredictResult -= Current_SoftwareBitmapFramePosePredictResult;
-        var service = Ioc.Default.GetService<EmoticonActionFrameService>();
+        var service = Ioc.Default.GetRequiredService<EmoticonActionFrameService>();
         service.ClearQueue();
         await CleanUpAsync();
 

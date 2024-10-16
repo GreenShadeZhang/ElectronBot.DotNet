@@ -166,7 +166,7 @@ public class Hw75Helper
 
     public async Task HaSwitchAsync(bool isOn)
     {
-        var localSettingsService = Ioc.Default.GetService<ILocalSettingsService>();
+        var localSettingsService = Ioc.Default.GetRequiredService<ILocalSettingsService>();
 
         var haSwitchModel = await localSettingsService.ReadSettingAsync<ComboxItemModel>(Constants.DefaultHaSwitchNameKey);
 

@@ -12,7 +12,7 @@ public class GetYellowCalendarService
     {
         try
         {
-            var _localSettingsService = Ioc.Default.GetService<ILocalSettingsService>();
+            var _localSettingsService = Ioc.Default.GetRequiredService<ILocalSettingsService>();
 
             var ret2 = await _localSettingsService
                 .ReadSettingAsync<CustomClockTitleConfig>(Constants.CustomClockTitleConfigKey);
@@ -24,7 +24,7 @@ public class GetYellowCalendarService
 
             if (noCache == true || string.IsNullOrWhiteSpace(yellowCalendarStr) || (!string.IsNullOrWhiteSpace(yellowCalendarStr) && !yellowCalendarStr.Contains("successed")))
             {
-                var httpClient = Ioc.Default.GetService<HttpClient>();
+                var httpClient = Ioc.Default.GetRequiredService<HttpClient>();
 
                 yellowCalendarStr = await httpClient.GetStringAsync(urlLast);
 

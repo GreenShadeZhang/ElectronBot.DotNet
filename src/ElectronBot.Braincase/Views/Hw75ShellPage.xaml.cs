@@ -140,7 +140,7 @@ public sealed partial class Hw75ShellPage : Page
 
     private static void OnKeyboardAcceleratorInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
     {
-        var navigationService = Ioc.Default.GetService<INavigationService>();
+        var navigationService = Ioc.Default.GetRequiredService<INavigationService>();
 
         var result = navigationService.GoBack();
 

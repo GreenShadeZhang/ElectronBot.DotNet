@@ -131,7 +131,7 @@ public partial class GestureAppConfigViewModel : ObservableRecipient, INavigatio
     {
         try
         {
-            var theme = Ioc.Default.GetService<IThemeSelectorService>();
+            var theme = Ioc.Default.GetRequiredService<IThemeSelectorService>();
             var addLaunchApDialog = new ContentDialog()
             {
                 Title = "AddAppStartConfigTitle".GetLocalized(),

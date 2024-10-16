@@ -23,7 +23,7 @@ namespace ElectronBot.Braincase.Services
             var urlLast = url + "?" + querys;
             var resultJson = string.Empty;
 
-            var appCode = Ioc.Default.GetService<IOptions<LocalSettingsOptions>>().Value.Hw75AppCode;
+            var appCode = Ioc.Default.GetRequiredService<IOptions<LocalSettingsOptions>>().Value.Hw75AppCode;
             using (var httpClient = new System.Net.Http.HttpClient())
             {
                 Uri uri = new Uri(urlLast);

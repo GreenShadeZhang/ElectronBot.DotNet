@@ -33,7 +33,7 @@ public sealed partial class GestureInteractionPage : Page
     public GestureInteractionPage()
     {
         this.InitializeComponent();
-        ViewModel = Ioc.Default.GetService<GestureInteractionViewModel>();
+        ViewModel = Ioc.Default.GetRequiredService<GestureInteractionViewModel>();
     }
 
     private void ModelLoadCompactOverlayPage_OnLoaded(object sender, RoutedEventArgs e)
