@@ -16,6 +16,7 @@ using ElectronBot.Braincase.Picker;
 using ElectronBot.Braincase.Services;
 using ElectronBot.Braincase.ViewModels;
 using ElectronBot.Braincase.Views;
+using ElectronBot.Copilot.Services.BotSharp;
 using ElectronBot.Copilot.ViewModels;
 using ElectronBot.DotNet;
 using ElectronBot.DotNet.LibUsb;
@@ -256,7 +257,7 @@ public static class ConfigureServicesExtensions
                 options.JsonSerializerOptions.Converters.Add(new TemplateMessageJsonConverter());
             })
             .AddHttpContextAccessor()
-            .AddScoped<IUserIdentity, UserIdentity>()
+            .AddScoped<IUserIdentity, BotUserIdentity>()
             .AddBotSharpLogger(config)
             // Configuration
             .BuildServiceProvider());

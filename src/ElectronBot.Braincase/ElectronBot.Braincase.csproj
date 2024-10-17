@@ -524,4 +524,8 @@
   <ItemGroup>
     <Resource Remove="Views\PoseRecognitionPage.xaml" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <Folder Include="Assets\MenuIcons\" />
+  </ItemGroup>
 </Project>

@@ -1,24 +1,72 @@
-﻿using BotSharp.Abstraction.Agents.Enums;
+﻿using System.Collections.Generic;
+using System.Linq;
+using BotSharp.Abstraction.Agents;
+using BotSharp.Abstraction.Agents.Enums;
+using BotSharp.Abstraction.Agents.Models;
 using BotSharp.Abstraction.Conversations;
+using BotSharp.Abstraction.Repositories.Filters;
+using BotSharp.Abstraction.Users;
+using BotSharp.Abstraction.Users.Enums;
+using BotSharp.Abstraction.Users.Models;
+using BotSharp.Abstraction.Utilities;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using ElectronBot.Braincase.Contracts.ViewModels;
 
 namespace ElectronBot.Copilot.ViewModels;
 
-public class AgentViewModel : ObservableRecipient, INavigationAware
+public partial class AgentViewModel : ObservableRecipient, INavigationAware
 {
     private readonly IConversationService _conversationService;
-    public AgentViewModel(IConversationService conversationService)
+    private readonly IUserIdentity _userIdentity;
+    private readonly IUserService _userService;
+    public AgentViewModel(IConversationService conversationService, IUserIdentity userIdentity, IUserService userService)
     {
         _conversationService = conversationService;
+        _userIdentity = userIdentity;
+        _userService = userService;
     }
 
-    public void OnNavigatedFrom() => throw new System.NotImplementedException();
+    [ObservableProperty]
+    List<Agent> _agents = new();
+
+    public void OnNavigatedFrom()
+    {
+
+    }
     public async void OnNavigatedTo(object parameter)
     {
+        var user = await _userService.GetUser(_userIdentity.Id);
+
+        if (user == null)
+        {
+            await _userService.CreateUser(new User
+            {
+                Id = _userIdentity.Id,
+                Email = _userIdentity.Email,
+                UserName = _userIdentity.UserName,
+                FirstName = _userIdentity.FirstName,
+                LastName = _userIdentity.LastName,
+                Role = UserRole.Admin,
+                Type = UserType.Client,
+            });
+        }
         var result = await _conversationService.NewConversation(new BotSharp.Abstraction.Conversations.Models.Conversation
         {
-            AgentId = BuiltInAgentId.Chatbot
+            AgentId = BuiltInAgentId.Chatbot,
+            UserId = _userIdentity.Id
         });
+
+        var agentService = Ioc.Default.GetRequiredService<IAgentService>();
+        var resultData = await agentService.RefreshAgents();
+
+        Agents = (await agentService.GetAgents(new AgentFilter
+        {
+            Pager = new Pagination
+            {
+                Page = 1,
+                Size = 10
+            }
+        })).Items.ToList();
     }
 }
