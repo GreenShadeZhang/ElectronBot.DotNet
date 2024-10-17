@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Views\Agents\AgentPage.xaml" />
+    <None Remove="Views\Agents\ChatPage.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -27,6 +28,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Verdure.WinUI.Common\Verdure.WinUI.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Views\Agents\ChatPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>

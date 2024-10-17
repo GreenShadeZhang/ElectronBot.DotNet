@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Page
+    x:Class="ElectronBot.Copilot.Views.Agents.ChatPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="using:CommunityToolkit.WinUI.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:BotSharp.Abstraction.Conversations.Models">
+    <Page.Resources>
+        <DataTemplate x:Key="ContactListViewTemplate" x:DataType="models:Conversation">
+            <TextBlock
+                Margin="0,5,0,5"
+                x:Phase="1"
+                Text="{x:Bind Title}" />
+        </DataTemplate>
+    </Page.Resources>
+    <ListView
+        x:Name="ConvList"
+        Width="350"
+        Height="400"
+        HorizontalAlignment="Left"
+        BorderBrush="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"
+        BorderThickness="1"
+        ItemTemplate="{StaticResource ContactListViewTemplate}"
+        ItemsSource="{x:Bind ViewModel.ConversationList, Mode=OneWay}" />
+</Page>
