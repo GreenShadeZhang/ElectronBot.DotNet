@@ -2,7 +2,6 @@
 using BotSharp.Abstraction.Repositories;
 using BotSharp.Abstraction.Users;
 using BotSharp.Core;
-using BotSharp.Core.Users.Services;
 using BotSharp.Logger;
 using Contracts.Services;
 using Controls;
@@ -18,6 +17,7 @@ using ElectronBot.Braincase.ViewModels;
 using ElectronBot.Braincase.Views;
 using ElectronBot.Copilot.Services.BotSharp;
 using ElectronBot.Copilot.ViewModels;
+using ElectronBot.Copilot.Views.Agents;
 using ElectronBot.DotNet;
 using ElectronBot.DotNet.LibUsb;
 using ElectronBot.DotNet.WinUsb;
@@ -250,6 +250,8 @@ public static class ConfigureServicesExtensions
             // add botsharp
             .AddTransient<AgentViewModel>()
             .AddTransient<AgentPage>()
+            .AddTransient<ChatViewModel>()
+            .AddTransient<ChatPage>()
             .AddSingleton(dbSettings)
             .AddBotSharpCore(config, options =>
             {

@@ -924,4 +924,7 @@
   <data name="AgentPage.Content" xml:space="preserve">
     <value>智能体</value>
   </data>
+  <data name="ChatPage.Content" xml:space="preserve">
+    <value>聊天</value>
+  </data>
 </root>

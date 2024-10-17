@@ -4,6 +4,7 @@ using ElectronBot.Braincase.Contracts.Services;
 using ElectronBot.Braincase.ViewModels;
 using ElectronBot.Braincase.Views;
 using ElectronBot.Copilot.ViewModels;
+using ElectronBot.Copilot.Views.Agents;
 using Microsoft.UI.Xaml.Controls;
 using ViewModels;
 using Views;
@@ -33,6 +34,7 @@ public class PageService : IPageService
         Configure<Hw75ViewModel, Hw75Page>();
 
         Configure<AgentViewModel, AgentPage>();
+        Configure<ChatViewModel, ChatPage>();
     }
 
     public Type GetPageType(string key)
