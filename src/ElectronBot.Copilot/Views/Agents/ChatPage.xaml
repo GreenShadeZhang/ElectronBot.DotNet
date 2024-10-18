@@ -16,14 +16,80 @@
                 x:Phase="1"
                 Text="{x:Bind Title}" />
         </DataTemplate>
+
+        <DataTemplate x:Key="UserMsgListViewTemplate" x:DataType="models:RoleDialogModel">
+            <TextBlock
+                Margin="0,5,0,5"
+                x:Phase="1"
+                Text="{x:Bind Content}" />
+        </DataTemplate>
     </Page.Resources>
-    <ListView
-        x:Name="ConvList"
-        Width="350"
-        Height="400"
-        HorizontalAlignment="Left"
-        BorderBrush="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"
-        BorderThickness="1"
-        ItemTemplate="{StaticResource ContactListViewTemplate}"
-        ItemsSource="{x:Bind ViewModel.ConversationList, Mode=OneWay}" />
+    <Grid x:Name="ContentArea">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <ListView
+            x:Name="ConvList"
+            Grid.Column="0"
+            Width="200"
+            Height="400"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            BorderBrush="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"
+            BorderThickness="1"
+            IsItemClickEnabled="True"
+            ItemTemplate="{StaticResource ContactListViewTemplate}"
+            ItemsSource="{x:Bind ViewModel.ConversationList, Mode=OneWay}"
+            SelectedIndex="0"
+            SelectedItem="{x:Bind ViewModel.SelectedConversation, Mode=TwoWay}">
+            <i:Interaction.Behaviors>
+                <ic:EventTriggerBehavior EventName="ItemClick">
+                    <ic:InvokeCommandAction Command="{x:Bind ViewModel.ConvSelectCommand}" CommandParameter="{x:Bind ConvList.SelectedItem, Mode=TwoWay}" />
+                </ic:EventTriggerBehavior>
+            </i:Interaction.Behaviors>
+        </ListView>
+        <StackPanel Grid.Column="1">
+            <ListView
+                x:Name="ChatList"
+                Width="420"
+                Height="360"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                BorderBrush="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"
+                BorderThickness="1"
+                IsItemClickEnabled="False"
+                ItemTemplate="{StaticResource UserMsgListViewTemplate}"
+                ItemsSource="{x:Bind ViewModel.ChatMessageList, Mode=OneWay}" />
+            <StackPanel Orientation="Horizontal">
+                <TextBox
+                    x:Name="SendTextTb"
+                    Width="320"
+                    Text="{x:Bind ViewModel.SendText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+                <Button
+                    x:Uid="StartChat"
+                    Width="48"
+                    Height="36"
+                    Margin="2"
+                    BorderBrush="{ThemeResource SystemAccentColor}"
+                    BorderThickness="2"
+                    Command="{x:Bind ViewModel.SendChatCommand}"
+                    Foreground="{ThemeResource SystemAccentColor}">
+                    <FontIcon FontFamily="/Assets/Font/Segoe Fluent Icons.ttf#Segoe Fluent Icons" Glyph="&#xE724;" />
+                </Button>
+                <Button
+                    x:Uid="StartChat"
+                    Width="48"
+                    Height="36"
+                    Margin="2"
+                    BorderBrush="{ThemeResource SystemAccentColor}"
+                    BorderThickness="2"
+                    Command="{x:Bind ViewModel.StartChatCommand}"
+                    Foreground="{ThemeResource SystemAccentColor}">
+                    <FontIcon FontFamily="/Assets/Font/Segoe Fluent Icons.ttf#Segoe Fluent Icons" Glyph="&#xE720;" />
+                </Button>
+            </StackPanel>
+        </StackPanel>
+
+    </Grid>
 </Page>
