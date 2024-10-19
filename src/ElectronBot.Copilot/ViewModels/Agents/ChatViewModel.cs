@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using BotSharp.Abstraction.Agents;
@@ -40,10 +41,10 @@ public partial class ChatViewModel : ObservableRecipient, INavigationAware
     List<Agent> _agents = new();
 
     [ObservableProperty]
-    List<Conversation> _conversationList = new();
+    ObservableCollection<Conversation> _conversationList = new();
 
     [ObservableProperty]
-    List<RoleDialogModel> _chatMessageList = new();
+    ObservableCollection<RoleDialogModel> _chatMessageList = new();
 
     [ObservableProperty]
     Conversation? _selectedConversation;
@@ -57,7 +58,12 @@ public partial class ChatViewModel : ObservableRecipient, INavigationAware
         if (conv == null) return Task.CompletedTask;
         _conversationService.SetConversationId(conv.Id, new List<MessageState>());
         var history = _conversationService.GetDialogHistory(fromBreakpoint: false);
-        ChatMessageList = history;
+        ChatMessageList = new ObservableCollection<RoleDialogModel>(history);
+        if (history.Count > 0)
+        {
+            var seconds = (DateTime.UtcNow - history.First().CreatedAt).TotalSeconds;
+        }
+       
         return Task.CompletedTask;
     }
 
@@ -128,7 +134,7 @@ public partial class ChatViewModel : ObservableRecipient, INavigationAware
             }
         })).Items.ToList();
 
-        ConversationList = (await _conversationService.GetConversations(new ConversationFilter
+        var convList = (await _conversationService.GetConversations(new ConversationFilter
         {
             Pager = new Pagination
             {
@@ -136,5 +142,8 @@ public partial class ChatViewModel : ObservableRecipient, INavigationAware
                 Size = 10
             }
         })).Items.ToList();
+
+        SelectedConversation = convList.FirstOrDefault();
+        ConversationList = new ObservableCollection<Conversation>(convList);
     }
 }
