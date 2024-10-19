@@ -6,5 +6,9 @@
   "id": "c2b57a74-ae4e-4c81-b3ad-9ac5bff982bd",
   "disabled": false,
   "isPublic": true,
+  "llmConfig": {
+    "provider": "openai",
+    "model": "qwen2-72b-instruct"
+  },
   "profiles": [ "pizza" ]
 }

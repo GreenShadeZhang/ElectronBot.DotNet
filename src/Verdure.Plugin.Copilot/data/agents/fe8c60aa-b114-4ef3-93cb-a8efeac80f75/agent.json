@@ -7,6 +7,10 @@
   "disabled": false,
   "isPublic": true,
   "profiles": [ "pizza" ],
+  "llmConfig": {
+    "provider": "openai",
+    "model": "qwen2-72b-instruct"
+  },
   "routingRules": [
     {
       "field": "order_number",
