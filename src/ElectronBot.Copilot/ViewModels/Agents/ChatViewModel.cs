@@ -59,11 +59,6 @@ public partial class ChatViewModel : ObservableRecipient, INavigationAware
         _conversationService.SetConversationId(conv.Id, new List<MessageState>());
         var history = _conversationService.GetDialogHistory(fromBreakpoint: false);
         ChatMessageList = new ObservableCollection<RoleDialogModel>(history);
-        if (history.Count > 0)
-        {
-            var seconds = (DateTime.UtcNow - history.First().CreatedAt).TotalSeconds;
-        }
-       
         return Task.CompletedTask;
     }
 
@@ -85,6 +80,7 @@ public partial class ChatViewModel : ObservableRecipient, INavigationAware
 
         _conversationService.SetConversationId(SelectedConversation.Id, new());
 
+        SendText = string.Empty;
         await _conversationService.SendMessage(SelectedConversation.AgentId, inputMsg,
             replyMessage: null,
             async msg =>

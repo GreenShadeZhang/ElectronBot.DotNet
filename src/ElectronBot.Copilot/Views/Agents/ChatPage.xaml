@@ -12,16 +12,18 @@
     <Page.Resources>
         <DataTemplate x:Key="ContactListViewTemplate" x:DataType="models:Conversation">
             <TextBlock
-                Margin="0,5,0,5"
+                Margin="0,8,0,8"
                 x:Phase="1"
-                Text="{x:Bind Title}" />
+                Text="{x:Bind Title}"
+                TextWrapping="WrapWholeWords" />
         </DataTemplate>
 
         <DataTemplate x:Key="UserMsgListViewTemplate" x:DataType="models:RoleDialogModel">
             <TextBlock
-                Margin="0,5,0,5"
+                Margin="0,8,0,8"
                 x:Phase="1"
-                Text="{x:Bind Content}" />
+                Text="{x:Bind Content}"
+                TextWrapping="WrapWholeWords" />
         </DataTemplate>
     </Page.Resources>
     <Grid x:Name="ContentArea">
@@ -33,7 +35,7 @@
             x:Name="ConvList"
             Grid.Column="0"
             Width="200"
-            Height="400"
+            Height="480"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
             BorderBrush="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"
@@ -52,8 +54,8 @@
         <StackPanel Grid.Column="1">
             <ListView
                 x:Name="ChatList"
-                Width="420"
-                Height="360"
+                Width="560"
+                Height="440"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
                 BorderBrush="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"
