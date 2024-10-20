@@ -6,7 +6,6 @@ using CommunityToolkit.Mvvm.Input;
 using Contracts.Services;
 using Controls;
 using ElectronBot.Braincase.Contracts.Services;
-using ElectronBot.Braincase.Controls;
 using ElectronBot.Braincase.Helpers;
 using ElectronBot.Braincase.Models;
 using Microsoft.UI.Xaml;
@@ -230,7 +229,7 @@ public partial class EmojisEditViewModel : ObservableRecipient
             {
                 ToastHelper.SendToast("取消导入", TimeSpan.FromSeconds(3));
             }
-           
+
         }
         catch (Exception ex)
         {
@@ -349,8 +348,8 @@ public partial class EmojisEditViewModel : ObservableRecipient
                 {
                     videoPath = emojis.EmojisVideoPath;
                 }
-                _actionExpressionProvider.PlayActionExpressionAsync(emojis, actions);
-                _ = ElectronBotHelper.Instance.MediaPlayerPlaySoundAsync(videoPath);
+                //_actionExpressionProvider.PlayActionExpressionAsync(emojis, actions);
+                _ = ElectronBotHelper.Instance.MediaPlayerPlaySoundAsync(videoPath, actions);
             }
             catch (Exception)
             {

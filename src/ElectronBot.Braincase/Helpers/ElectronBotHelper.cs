@@ -1,4 +1,5 @@
-﻿using System.IO.Ports;
+﻿using System.Diagnostics;
+using System.IO.Ports;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using ElectronBot.Braincase.Contracts.Services;
@@ -128,6 +129,10 @@ public class ElectronBotHelper
     public event EventHandler<string>? PlayEmojisByNameId;
 
     private MediaPlayer mediaPlayer = new();
+
+    private double _frameRate = 30.0; // 假设视频的帧率为30帧每秒
+
+    private List<ElectronBotAction>? _actions;
 
     private bool isTTS = false;
 
@@ -652,13 +657,15 @@ public class ElectronBotHelper
     /// 播放表情声音
     /// </summary>
     /// <param name="path"></param>
+    /// <param name="actions"></param>
     /// <returns></returns>
-    public async Task MediaPlayerPlaySoundAsync(string path)
+    public async Task MediaPlayerPlaySoundAsync(string path, List<ElectronBotAction>? actions = null)
     {
         if (!string.IsNullOrWhiteSpace(path))
         {
             try
             {
+                _actions = actions;
                 var localSettingsService = Ioc.Default.GetRequiredService<ILocalSettingsService>();
 
                 var audioModel = await localSettingsService
@@ -886,24 +893,53 @@ public class ElectronBotHelper
         // 获取转换后的数据
         var rgbData = new byte[image.Width * image.Height * 3];
 
-        // 遍历每个像素，将Rgba32转换为Rgb24
+        // 遍历每个像素，将Rgba32转换为Bgr24
         for (var y = 0; y < image.Height; y++)
         {
             for (var x = 0; x < image.Width; x++)
             {
                 var rgbaPixel = image[x, y];
                 var rgbIndex = (y * image.Width + x) * 3;
-                rgbData[rgbIndex] = rgbaPixel.R;
+                rgbData[rgbIndex] = rgbaPixel.B;
                 rgbData[rgbIndex + 1] = rgbaPixel.G;
-                rgbData[rgbIndex + 2] = rgbaPixel.B;
+                rgbData[rgbIndex + 2] = rgbaPixel.R;
             }
         }
 
-        // 处理rgbData...
+        var currentAction = new ElectronBotAction();
+
+        // 获取当前播放位置
+        var position = sender.PlaybackSession.Position;
+
+        // 计算当前帧的帧序
+        var currentFrameIndex = (int)(position.TotalSeconds * _frameRate);
+
+        Debug.WriteLine($"当前帧序：{currentFrameIndex}");
+
+        if (_actions != null && _actions.Count > 0)
+        {
+            var fullTime = sender.NaturalDuration;
+
+            var bili = position / fullTime;
+
+            var actionCount = (int)(_actions.Count * bili);
+
+            if (actionCount >= _actions.Count)
+            {
+                actionCount = _actions.Count - 1;
+            }
+            currentAction = _actions[actionCount];
+        }
 
         var service = Ioc.Default.GetRequiredService<EmoticonActionFrameService>();
 
-        var frameData = new EmoticonActionFrame(rgbData, true);
+        var frameData = new EmoticonActionFrame(rgbData, true,
+            currentAction.J1,
+            currentAction.J2,
+            currentAction.J3,
+            currentAction.J4,
+            currentAction.J5,
+            currentAction.J6);
 
         _ = await service.SendToUsbDeviceAsync(frameData);
     }
