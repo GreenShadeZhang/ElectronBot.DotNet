@@ -1,20 +1,16 @@
 ﻿using System.Diagnostics;
-using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text.Json;
-using ElectronBot.Braincase.Contracts.Services;
 using ElectronBot.Braincase.Models;
-using Microsoft.Graphics.Canvas;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Services;
+using SixLabors.ImageSharp.Processing;
 using Verdure.ElectronBot.Core.Models;
 using Windows.Devices.Enumeration;
 using Windows.Graphics.Imaging;
-using Windows.Media.Core;
 using Windows.Media.Devices;
-using Windows.Media.Playback;
 using Windows.Storage;
 using Windows.Storage.Streams;
 
@@ -221,7 +217,7 @@ public class EbHelper
                 {
                     var base64Text = action.ImageData;
 
-                    var data = new byte[240 * 240 * 3];
+                    var rgbData = new byte[240 * 240 * 3];
 
                     if (base64Text != null)
                     {
@@ -233,22 +229,35 @@ public class EbHelper
 
                         var bytes = Convert.FromBase64String(base64Text);
 
-                        var imageStream = bytes.AsBuffer().AsStream();
+                        //使用ImageSharp处理帧数据
+                        using var image = SixLabors.ImageSharp.Image
+                            .Load<SixLabors.ImageSharp.PixelFormats.Rgba32>(bytes);
 
-                        var image = new Bitmap(imageStream);
+                        image.Mutate(x =>
+                        {
+                            x.Resize(240, 240);
+                        });
 
-                        var mat = OpenCvSharp.Extensions.BitmapConverter.ToMat(image);
+                        // 获取转换后的数据
+                        //var rgbData = new byte[image.Width * image.Height * 3];
 
-                        var mat1 = mat.Resize(new OpenCvSharp.Size(240, 240), 0, 0, OpenCvSharp.InterpolationFlags.Area);
+                        // 遍历每个像素，将Rgba32转换为Bgr24
+                        for (var y = 0; y < image.Height; y++)
+                        {
+                            for (var x = 0; x < image.Width; x++)
+                            {
+                                var rgbaPixel = image[x, y];
+                                var rgbIndex = (y * image.Width + x) * 3;
+                                rgbData[rgbIndex] = rgbaPixel.B;
+                                rgbData[rgbIndex + 1] = rgbaPixel.G;
+                                rgbData[rgbIndex + 2] = rgbaPixel.R;
+                            }
+                        }
 
-                        var mat2 = mat1.CvtColor(OpenCvSharp.ColorConversionCodes.RGBA2BGR);
 
-                        var dataMeta = mat2.Data;
-
-                        Marshal.Copy(dataMeta, data, 0, 240 * 240 * 3);
                     }
                     var frame = new EmoticonActionFrame(
-                             data, true, action.J1, action.J2, action.J3, action.J4, action.J5, action.J6);
+                             rgbData, true, action.J1, action.J2, action.J3, action.J4, action.J5, action.J6);
 
                     _ = await service.SendToUsbDeviceAsync(frame);
                 }
@@ -279,27 +288,50 @@ public class EbHelper
 
             await encoder.FlushAsync();
 
-            using var image = new Bitmap(stream.AsStream());
+            byte[] pixelBytes;
 
-            var mat = OpenCvSharp.Extensions.BitmapConverter.ToMat(image);
+            using (DataReader dataReader = new DataReader(stream.GetInputStreamAt(0)))
+            {
+                var streamSize = (uint)stream.Size;
+                await dataReader.LoadAsync(streamSize);
+                pixelBytes = new byte[streamSize];
+                dataReader.ReadBytes(pixelBytes);
+            }
 
-            var mat1 = mat.Resize(new OpenCvSharp.Size(240, 240), 0, 0, OpenCvSharp.InterpolationFlags.Area);
+            //使用ImageSharp处理帧数据
+            using var image = SixLabors.ImageSharp.Image
+                .LoadPixelData<SixLabors.ImageSharp.PixelFormats.Rgba32>(pixelBytes,
+                (int)softwareBitmap.PixelWidth, (int)softwareBitmap.PixelHeight);
 
-            var mat2 = mat1.CvtColor(OpenCvSharp.ColorConversionCodes.RGBA2BGR);
+            image.Mutate(x =>
+            {
+                x.Resize(240, 240);
+            });
 
-            var dataMeta = mat2.Data;
+            // 获取转换后的数据
+            var rgbData = new byte[image.Width * image.Height * 3];
 
-            var data = new byte[240 * 240 * 3];
+            // 遍历每个像素，将Rgba32转换为Bgr24
+            for (var y = 0; y < image.Height; y++)
+            {
+                for (var x = 0; x < image.Width; x++)
+                {
+                    var rgbaPixel = image[x, y];
+                    var rgbIndex = (y * image.Width + x) * 3;
+                    rgbData[rgbIndex] = rgbaPixel.B;
+                    rgbData[rgbIndex + 1] = rgbaPixel.G;
+                    rgbData[rgbIndex + 2] = rgbaPixel.R;
+                }
+            }
 
-            Marshal.Copy(dataMeta, data, 0, 240 * 240 * 3);
 
-            var frame = new EmoticonActionFrame(data, frameData.Enable,
+            var frame = new EmoticonActionFrame(rgbData, frameData.Enable,
                 frameData.J1, frameData.J2, frameData.J3, frameData.J4, frameData.J5, frameData.J6);
 
             var service = Ioc.Default.GetRequiredService<EmoticonActionFrameService>();
 
             ElectronBotHelper.Instance.ModelActionInvoke(
-                new ModelActionFrame(mat2.ToMemoryStream(),
+                new ModelActionFrame(stream.AsStream(),
                     false, frameData.J1, frameData.J2, frameData.J3, frameData.J4, frameData.J5, frameData.J6));
 
             await service.SendToUsbDeviceAsync(frame);
@@ -332,25 +364,47 @@ public class EbHelper
 
             await encoder.FlushAsync();
 
-            var image = new Bitmap(stream.AsStream());
+            byte[] pixelBytes;
 
-            var mat = OpenCvSharp.Extensions.BitmapConverter.ToMat(image);
+            using (DataReader dataReader = new DataReader(stream.GetInputStreamAt(0)))
+            {
+                var streamSize = (uint)stream.Size;
+                await dataReader.LoadAsync(streamSize);
+                pixelBytes = new byte[streamSize];
+                dataReader.ReadBytes(pixelBytes);
+            }
 
-            var mat1 = mat.Resize(new OpenCvSharp.Size(240, 240), 0, 0, OpenCvSharp.InterpolationFlags.Area);
+            //使用ImageSharp处理帧数据
+            using var image = SixLabors.ImageSharp.Image
+                .LoadPixelData<SixLabors.ImageSharp.PixelFormats.Rgba32>(pixelBytes,
+                (int)softwareBitmap.PixelWidth, (int)softwareBitmap.PixelHeight);
 
-            var mat2 = mat1.CvtColor(OpenCvSharp.ColorConversionCodes.RGBA2BGR);
+            image.Mutate(x =>
+            {
+                x.Resize(240, 240);
+            });
 
-            var dataMeta = mat2.Data;
+            // 获取转换后的数据
+            var rgbData = new byte[image.Width * image.Height * 3];
 
-            var data = new byte[240 * 240 * 3];
+            // 遍历每个像素，将Rgba32转换为Bgr24
+            for (var y = 0; y < image.Height; y++)
+            {
+                for (var x = 0; x < image.Width; x++)
+                {
+                    var rgbaPixel = image[x, y];
+                    var rgbIndex = (y * image.Width + x) * 3;
+                    rgbData[rgbIndex] = rgbaPixel.B;
+                    rgbData[rgbIndex + 1] = rgbaPixel.G;
+                    rgbData[rgbIndex + 2] = rgbaPixel.R;
+                }
+            }
 
-            Marshal.Copy(dataMeta, data, 0, 240 * 240 * 3);
-
-            var frame = new EmoticonActionFrame(data);
+            var frame = new EmoticonActionFrame(rgbData);
 
             var service = Ioc.Default.GetRequiredService<EmoticonActionFrameService>();
 
-            ElectronBotHelper.Instance.ModelActionInvoke(new ModelActionFrame(mat2.ToMemoryStream()));
+            ElectronBotHelper.Instance.ModelActionInvoke(new ModelActionFrame(stream.AsStream()));
 
             await service.SendToUsbDeviceAsync(frame);
         }
@@ -442,7 +496,6 @@ public class EbHelper
     /// <returns></returns>
     private static async Task<EmoticonActionFrame> SetClockUiToFrameAsync(UIElement element)
     {
-        var data = new byte[240 * 240 * 3];
         try
         {
             var bitmap = new RenderTargetBitmap();
@@ -451,36 +504,41 @@ public class EbHelper
 
             var pixels = await bitmap.GetPixelsAsync();
 
-            //var canvasDevice = Ioc.Default.GetRequiredService<CanvasDevice>();
-            // Transfer the pixel data from XAML to Win2D for further processing.
-            using var canvasDevice = new CanvasDevice();
+            var pixelBytes = pixels.ToArray();
 
-            using var canvasBitmap = CanvasBitmap.CreateFromBytes(
-                canvasDevice, pixels.ToArray(), bitmap.PixelWidth, bitmap.PixelHeight,
-                Windows.Graphics.DirectX.DirectXPixelFormat.B8G8R8A8UIntNormalized);
+            //使用ImageSharp处理帧数据
+            using var image = SixLabors.ImageSharp.Image
+                .LoadPixelData<SixLabors.ImageSharp.PixelFormats.Rgba32>(pixelBytes,
+                (int)bitmap.PixelWidth, (int)bitmap.PixelHeight);
 
-            using IRandomAccessStream stream = new InMemoryRandomAccessStream();
+            image.Mutate(x =>
+            {
+                x.Resize(240, 240);
+            });
 
-            await canvasBitmap.SaveAsync(stream, CanvasBitmapFileFormat.Png);
+            // 获取转换后的数据
+            var rgbData = new byte[image.Width * image.Height * 3];
 
-            var image = new Bitmap(stream.AsStream());
+            // 遍历每个像素，将Rgba32转换为Bgr24
+            for (var y = 0; y < image.Height; y++)
+            {
+                for (var x = 0; x < image.Width; x++)
+                {
+                    var rgbaPixel = image[x, y];
+                    var rgbIndex = (y * image.Width + x) * 3;
+                    rgbData[rgbIndex] = rgbaPixel.B;
+                    rgbData[rgbIndex + 1] = rgbaPixel.G;
+                    rgbData[rgbIndex + 2] = rgbaPixel.R;
+                }
+            }
 
-            var mat = OpenCvSharp.Extensions.BitmapConverter.ToMat(image);
-
-            var mat1 = mat.Resize(new OpenCvSharp.Size(240, 240), 0, 0, OpenCvSharp.InterpolationFlags.Area);
-
-            var mat2 = mat1.CvtColor(OpenCvSharp.ColorConversionCodes.RGBA2BGR);
-
-            var dataMeta = mat2.Data;
-
-            Marshal.Copy(dataMeta, data, 0, 240 * 240 * 3);
-
+            return new EmoticonActionFrame(rgbData);
         }
         catch (Exception)
         {
-
+            var data = new byte[240 * 240 * 3];
+            return new EmoticonActionFrame(data);
         }
-        return new EmoticonActionFrame(data);
     }
 
     /// <summary>
@@ -531,12 +589,12 @@ public class EbHelper
     /// <returns></returns>
     public static bool IsVoiceEnabled()
     {
-          // 检测Space + E是否被按下
-         if ((GetAsyncKeyState(0x20) & 0x8000) != 0 && (GetAsyncKeyState((int)'E') & 0x8000) != 0)
-         {
-             return true;
-         }
-         return false;
+        // 检测Space + E是否被按下
+        if ((GetAsyncKeyState(0x20) & 0x8000) != 0 && (GetAsyncKeyState((int)'E') & 0x8000) != 0)
+        {
+            return true;
+        }
+        return false;
     }
     /*
     GitHub Copilot: 键盘虚拟键码是一个0到255之间的整数，用于表示键盘上的每个按键。以下是一些常见按键的虚拟键码：

@@ -394,8 +394,8 @@ public class ElectronBotHelper
                 {
                     videoPath = emojis.EmojisVideoPath;
                 }
-                _ = ElectronBotHelper.Instance.MediaPlayerPlaySoundAsync(videoPath);
-                await Ioc.Default.GetRequiredService<IActionExpressionProvider>().PlayActionExpressionAsync(emojis, actions);
+                _ = ElectronBotHelper.Instance.MediaPlayerPlaySoundAsync(videoPath, actions);
+                //await Ioc.Default.GetRequiredService<IActionExpressionProvider>().PlayActionExpressionAsync(emojis, actions);
             }
             catch (Exception)
             {
@@ -466,8 +466,8 @@ public class ElectronBotHelper
                 {
                     videoPath = emojis.EmojisVideoPath;
                 }
-                _ = ElectronBotHelper.Instance.MediaPlayerPlaySoundAsync(videoPath);
-                await Ioc.Default.GetRequiredService<IActionExpressionProvider>().PlayActionExpressionAsync(emojis, actions);
+                _ = ElectronBotHelper.Instance.MediaPlayerPlaySoundAsync(videoPath, actions);
+                //await Ioc.Default.GetRequiredService<IActionExpressionProvider>().PlayActionExpressionAsync(emojis, actions);
             }
             catch (Exception)
             {

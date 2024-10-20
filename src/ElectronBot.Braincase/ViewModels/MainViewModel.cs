@@ -703,7 +703,7 @@ public partial class MainViewModel : ObservableRecipient, INavigationAware
 
             if (clockName == "GooeyFooter" || clockName == "CustomView" || clockName == "GrooveView")
             {
-                _dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 40);
+                _dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 30);
             }
             else
             {

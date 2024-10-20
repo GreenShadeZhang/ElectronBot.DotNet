@@ -1,10 +1,8 @@
 ﻿using System.Runtime.InteropServices.WindowsRuntime;
-using ElectronBot.Braincase.Helpers;
 using ElectronBot.Braincase.ViewModels;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Imaging;
-using Windows.Foundation;
 using Windows.Graphics.Imaging;
 using Windows.Storage.Streams;
 
