@@ -217,7 +217,6 @@ public class GamepadViewModel : ObservableRecipient, INavigationAware
                     }
                     _ = ElectronBotHelper.Instance.MediaPlayerPlaySoundAsync(videoPath);
 
-                    await Ioc.Default.GetRequiredService<IActionExpressionProvider>().PlayActionExpressionAsync(action);
                 }
             }
             else if (reading.Buttons.HasFlag(GamepadButtons.A) && isHoldRightThumbstick == true)

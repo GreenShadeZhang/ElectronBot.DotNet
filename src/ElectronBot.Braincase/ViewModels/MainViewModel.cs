@@ -368,7 +368,6 @@ public partial class MainViewModel : ObservableRecipient, INavigationAware
                     videoPath = emojis.EmojisVideoPath;
                 }
                 _ = ElectronBotHelper.Instance.MediaPlayerPlaySoundByTtsAsync(text, true);
-                await Ioc.Default.GetRequiredService<IActionExpressionProvider>().PlayActionExpressionAsync(emojis, actions);
             }
             catch (Exception)
             {
@@ -458,7 +457,6 @@ public partial class MainViewModel : ObservableRecipient, INavigationAware
                     videoPath = emojis.EmojisVideoPath;
                 }
                 _ = ElectronBotHelper.Instance.MediaPlayerPlaySoundByTtsAsync("please wait for a moment", false);
-                await Ioc.Default.GetRequiredService<IActionExpressionProvider>().PlayActionExpressionAsync(emojis, actions);
 
                 try
                 {
@@ -634,7 +632,6 @@ public partial class MainViewModel : ObservableRecipient, INavigationAware
             //}
             _mediaPlayer.Play();
 
-            _actionExpressionProvider.PlayActionExpressionAsync($"{Constants.POTENTIAL_EMOJI_LIST[r]}", actions.ToList());
         }
         catch (Exception)
         {
@@ -884,17 +881,17 @@ public partial class MainViewModel : ObservableRecipient, INavigationAware
             {
                 await ResetActionAsync();
 
-                var matData = new OpenCvSharp.Mat(Package.Current.InstalledLocation.Path + $"\\Assets\\Emoji\\Pic\\eyes-closed.png");
+                //var matData = new OpenCvSharp.Mat(Package.Current.InstalledLocation.Path + $"\\Assets\\Emoji\\Pic\\eyes-closed.png");
 
-                var mat2 = matData.CvtColor(OpenCvSharp.ColorConversionCodes.RGBA2BGR);
+                //var mat2 = matData.CvtColor(OpenCvSharp.ColorConversionCodes.RGBA2BGR);
 
-                var dataMeta = mat2.Data;
+                //var dataMeta = mat2.Data;
 
-                var data = new byte[240 * 240 * 3];
+                //var data = new byte[240 * 240 * 3];
 
-                Marshal.Copy(dataMeta, data, 0, 240 * 240 * 3);
+                //Marshal.Copy(dataMeta, data, 0, 240 * 240 * 3);
 
-                EbHelper.FaceData = data;
+                //EbHelper.FaceData = data;
 
                 _dispatcherTimer.Interval = TimeSpan.FromMilliseconds(50);
                 _dispatcherTimer.Start();

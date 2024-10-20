@@ -17,7 +17,6 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Media.Imaging;
-using OpenCvSharp.Extensions;
 using Services;
 using Windows.ApplicationModel;
 using Windows.Graphics.Imaging;
@@ -102,59 +101,59 @@ public partial class GestureClassificationViewModel : ObservableRecipient, INavi
     [RelayCommand]
     private async Task TestGestureClassficationAsync()
     {
-        var handResult = string.Empty;
-        var matData = new OpenCvSharp.Mat(Package.Current.InstalledLocation.Path + $"\\Assets\\hand.png");
+        //var handResult = string.Empty;
+        //var matData = new OpenCvSharp.Mat(Package.Current.InstalledLocation.Path + $"\\Assets\\hand.png");
 
-        var mat2 = matData.CvtColor(OpenCvSharp.ColorConversionCodes.BGR2RGB);
+        //var mat2 = matData.CvtColor(OpenCvSharp.ColorConversionCodes.BGR2RGB);
 
-        var dataMeta = mat2.Data;
+        //var dataMeta = mat2.Data;
 
-        var length = mat2.Width * mat2.Height * mat2.Channels();
+        //var length = mat2.Width * mat2.Height * mat2.Channels();
 
-        var data = new byte[length];
+        //var data = new byte[length];
 
-        Marshal.Copy(dataMeta, data, 0, length);
+        //Marshal.Copy(dataMeta, data, 0, length);
 
-        var widthStep = (int)mat2.Step();
+        //var widthStep = (int)mat2.Step();
 
-        System.Drawing.Bitmap bitmap = BitmapConverter.ToBitmap(matData);
+        //System.Drawing.Bitmap bitmap = BitmapConverter.ToBitmap(matData);
 
-        var ret = await BitmapToBitmapImage(bitmap);
+        //var ret = await BitmapToBitmapImage(bitmap);
 
-        if (ret.BitmapPixelFormat != BitmapPixelFormat.Bgra8 ||
-                ret.BitmapAlphaMode == BitmapAlphaMode.Straight)
-        {
-            ret = SoftwareBitmap.Convert(ret, BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied);
-        }
+        //if (ret.BitmapPixelFormat != BitmapPixelFormat.Bgra8 ||
+        //        ret.BitmapAlphaMode == BitmapAlphaMode.Straight)
+        //{
+        //    ret = SoftwareBitmap.Convert(ret, BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied);
+        //}
 
-        var imgframe = new ImageFrame(ImageFormat.Types.Format.Srgb, mat2.Width, mat2.Height, widthStep, data);
+        //var imgframe = new ImageFrame(ImageFormat.Types.Format.Srgb, mat2.Width, mat2.Height, widthStep, data);
 
-        var handsOutput = calculator.Compute(imgframe);
+        //var handsOutput = calculator.Compute(imgframe);
 
-        if (handsOutput.MultiHandLandmarks != null)
-        {
-            var landmarks = handsOutput.MultiHandLandmarks[0].Landmark;
+        //if (handsOutput.MultiHandLandmarks != null)
+        //{
+        //    var landmarks = handsOutput.MultiHandLandmarks[0].Landmark;
 
-            Debug.WriteLine($"Got hands output with {landmarks.Count} landmarks");
+        //    Debug.WriteLine($"Got hands output with {landmarks.Count} landmarks");
 
-            handResult = HandDataFormatHelper.PredictResult(landmarks.ToList(), modelPath);
-        }
-        else
-        {
-            Debug.WriteLine("No hand landmarks");
-        }
+        //    handResult = HandDataFormatHelper.PredictResult(landmarks.ToList(), modelPath);
+        //}
+        //else
+        //{
+        //    Debug.WriteLine("No hand landmarks");
+        //}
 
-        App.MainWindow.DispatcherQueue.TryEnqueue(async () =>
-        {
-            var source = new SoftwareBitmapSource();
+        //App.MainWindow.DispatcherQueue.TryEnqueue(async () =>
+        //{
+        //    var source = new SoftwareBitmapSource();
 
-            await source.SetBitmapAsync(ret);
+        //    await source.SetBitmapAsync(ret);
 
-            // Set the source of the Image control
-            ImgFileSource = source;
+        //    // Set the source of the Image control
+        //    ImgFileSource = source;
 
-            ResultLabel = handResult;
-        });
+        //    ResultLabel = handResult;
+        //});
     }
 
     [ObservableProperty]

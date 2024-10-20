@@ -295,62 +295,62 @@ public class VisionService
         {
             return (null, null);
         }
-        try
-        {
-            if (softwareBitmap != null)
-            {
-                _isProcessing = true;
+        //try
+        //{
+        //    if (softwareBitmap != null)
+        //    {
+        //        _isProcessing = true;
 
-                using IRandomAccessStream stream = new InMemoryRandomAccessStream();
+        //        using IRandomAccessStream stream = new InMemoryRandomAccessStream();
 
-                var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, stream);
+        //        var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, stream);
 
-                // Set the software bitmap
-                encoder.SetSoftwareBitmap(softwareBitmap);
+        //        // Set the software bitmap
+        //        encoder.SetSoftwareBitmap(softwareBitmap);
 
-                await encoder.FlushAsync();
+        //        await encoder.FlushAsync();
 
-                using var image = new Bitmap(stream.AsStream());
+        //        using var image = new Bitmap(stream.AsStream());
 
-                var matData = OpenCvSharp.Extensions.BitmapConverter.ToMat(image);
+        //        var matData = OpenCvSharp.Extensions.BitmapConverter.ToMat(image);
 
-                var mat2 = matData.CvtColor(OpenCvSharp.ColorConversionCodes.BGR2RGB);
+        //        var mat2 = matData.CvtColor(OpenCvSharp.ColorConversionCodes.BGR2RGB);
 
-                var dataMeta = mat2.Data;
+        //        var dataMeta = mat2.Data;
 
-                var length = mat2.Width * mat2.Height * mat2.Channels();
+        //        var length = mat2.Width * mat2.Height * mat2.Channels();
 
-                var data = new byte[length];
+        //        var data = new byte[length];
 
-                Marshal.Copy(dataMeta, data, 0, length);
+        //        Marshal.Copy(dataMeta, data, 0, length);
 
-                var widthStep = (int)mat2.Step();
+        //        var widthStep = (int)mat2.Step();
 
-                using var imgFrame = new Mediapipe.Net.Framework.Format.ImageFrame(ImageFormat.Types.Format.Srgb, mat2.Width, mat2.Height, widthStep, data);
+        //        using var imgFrame = new Mediapipe.Net.Framework.Format.ImageFrame(ImageFormat.Types.Format.Srgb, mat2.Width, mat2.Height, widthStep, data);
 
-                using var imageHandsFrame = new Mediapipe.Net.Framework.Format.ImageFrame(ImageFormat.Types.Format.Srgb, mat2.Width, mat2.Height, widthStep, data);
+        //        using var imageHandsFrame = new Mediapipe.Net.Framework.Format.ImageFrame(ImageFormat.Types.Format.Srgb, mat2.Width, mat2.Height, widthStep, data);
 
-                var postOutput = _calculator.Compute(imgFrame);
+        //        var postOutput = _calculator.Compute(imgFrame);
 
-                var handsOutput = _handsCalculator.Compute(imageHandsFrame);
+        //        var handsOutput = _handsCalculator.Compute(imageHandsFrame);
 
-                if (handsOutput.MultiHandLandmarks != null)
-                {
-                    var landmarks = handsOutput.MultiHandLandmarks[0].Landmark;
+        //        if (handsOutput.MultiHandLandmarks != null)
+        //        {
+        //            var landmarks = handsOutput.MultiHandLandmarks[0].Landmark;
 
-                    var result = HandDataFormatHelper.PredictResult(landmarks.ToList(), _modelPath!);
+        //            var result = HandDataFormatHelper.PredictResult(landmarks.ToList(), _modelPath!);
 
-                    _isProcessing = false;
-                    return (postOutput, result);
-                }
-                _isProcessing = false;
-                return (postOutput, null);
-            }
-        }
-        catch (Exception)
-        {
-            _isProcessing = false;
-        }
+        //            _isProcessing = false;
+        //            return (postOutput, result);
+        //        }
+        //        _isProcessing = false;
+        //        return (postOutput, null);
+        //    }
+        //}
+        //catch (Exception)
+        //{
+        //    _isProcessing = false;
+        //}
 
         return (null, null);
     }

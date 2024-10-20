@@ -1017,17 +1017,17 @@ public partial class MovieViewModel : ObservableRecipient
 
                         using var image = new System.Drawing.Bitmap(faceStream.AsStream());
 
-                        using var mat = OpenCvSharp.Extensions.BitmapConverter.ToMat(image);
+                        //using var mat = OpenCvSharp.Extensions.BitmapConverter.ToMat(image);
 
-                        using var mat1 = mat.Resize(new OpenCvSharp.Size(240, 240), 0, 0, OpenCvSharp.InterpolationFlags.Area);
+                        //using var mat1 = mat.Resize(new OpenCvSharp.Size(240, 240), 0, 0, OpenCvSharp.InterpolationFlags.Area);
 
-                        using var mat2 = mat1.CvtColor(OpenCvSharp.ColorConversionCodes.RGBA2BGR);
+                        //using var mat2 = mat1.CvtColor(OpenCvSharp.ColorConversionCodes.RGBA2BGR);
 
-                        var dataMeta = mat2.Data;
+                        //var dataMeta = mat2.Data;
 
                         var faceData = new byte[240 * 240 * 3];
 
-                        Marshal.Copy(dataMeta, faceData, 0, 240 * 240 * 3);
+                        //Marshal.Copy(dataMeta, faceData, 0, 240 * 240 * 3);
 
                         _faceData = faceData;
                     }
@@ -1065,32 +1065,32 @@ public partial class MovieViewModel : ObservableRecipient
 
                 using var imagePose = new System.Drawing.Bitmap(stream.AsStream());
 
-                using var matPoseData = OpenCvSharp.Extensions.BitmapConverter.ToMat(imagePose);
+                //using var matPoseData = OpenCvSharp.Extensions.BitmapConverter.ToMat(imagePose);
 
-                using var matPose2 = matPoseData.CvtColor(OpenCvSharp.ColorConversionCodes.BGR2RGB);
+                //using var matPose2 = matPoseData.CvtColor(OpenCvSharp.ColorConversionCodes.BGR2RGB);
 
-                var dataMetaPose = matPose2.Data;
+                //var dataMetaPose = matPose2.Data;
 
-                var length = matPose2.Width * matPose2.Height * matPose2.Channels();
+                //var length = matPose2.Width * matPose2.Height * matPose2.Channels();
 
-                var data = new byte[length];
+                //var data = new byte[length];
 
-                Marshal.Copy(dataMetaPose, data, 0, length);
+                //Marshal.Copy(dataMetaPose, data, 0, length);
 
-                var widthStep = (int)matPose2.Step();
+                //var widthStep = (int)matPose2.Step();
 
-                using var imgFrame = new ImageFrame(ImageFormat.Types.Format.Srgb, matPose2.Width, matPose2.Height, widthStep, data);
+                //using var imgFrame = new ImageFrame(ImageFormat.Types.Format.Srgb, matPose2.Width, matPose2.Height, widthStep, data);
 
-                var handsOutput = calculator!.Compute(imgFrame);
+                //var handsOutput = calculator!.Compute(imgFrame);
 
-                if (handsOutput.PoseLandmarks != null)
-                {
-                    CameraFrameService.Current.NotifyPosePredictResult(handsOutput);
-                }
-                else
-                {
-                    Debug.WriteLine("No hand landmarks");
-                }
+                //if (handsOutput.PoseLandmarks != null)
+                //{
+                //    CameraFrameService.Current.NotifyPosePredictResult(handsOutput);
+                //}
+                //else
+                //{
+                //    Debug.WriteLine("No hand landmarks");
+                //}
 
                 //_ = _poseRecognitionService.PosePredictResultUnUseQueueAsync(calculator, null, stream.AsStream());
             }

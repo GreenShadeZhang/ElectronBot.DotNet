@@ -73,41 +73,41 @@ public class GestureClassificationService
 
                 var image = new Bitmap(stream.AsStream());
 
-                var matData = OpenCvSharp.Extensions.BitmapConverter.ToMat(image);
+                //var matData = OpenCvSharp.Extensions.BitmapConverter.ToMat(image);
 
-                var mat2 = matData.CvtColor(OpenCvSharp.ColorConversionCodes.BGR2RGB);
+                //var mat2 = matData.CvtColor(OpenCvSharp.ColorConversionCodes.BGR2RGB);
 
-                var dataMeta = mat2.Data;
+                //var dataMeta = mat2.Data;
 
-                var length = mat2.Width * mat2.Height * mat2.Channels();
+                //var length = mat2.Width * mat2.Height * mat2.Channels();
 
-                var data = new byte[length];
+                //var data = new byte[length];
 
-                Marshal.Copy(dataMeta, data, 0, length);
+                //Marshal.Copy(dataMeta, data, 0, length);
 
-                var widthStep = (int)mat2.Step();
+                //var widthStep = (int)mat2.Step();
 
-                var imgframe = new ImageFrame(ImageFormat.Types.Format.Srgb, mat2.Width, mat2.Height, widthStep, data);
+                //var imgframe = new ImageFrame(ImageFormat.Types.Format.Srgb, mat2.Width, mat2.Height, widthStep, data);
 
-                var handsOutput = _calculator!.Compute(imgframe);
+                //var handsOutput = _calculator!.Compute(imgframe);
 
-                if (handsOutput.MultiHandLandmarks != null)
-                {
-                    var landmarks = handsOutput.MultiHandLandmarks[0].Landmark;
+                //if (handsOutput.MultiHandLandmarks != null)
+                //{
+                //    var landmarks = handsOutput.MultiHandLandmarks[0].Landmark;
 
-                    Debug.WriteLine($"Got hands output with {landmarks.Count} landmarks");
+                //    Debug.WriteLine($"Got hands output with {landmarks.Count} landmarks");
 
-                    var result = HandDataFormatHelper.PredictResult(landmarks.ToList(), _modelPath!);
+                //    var result = HandDataFormatHelper.PredictResult(landmarks.ToList(), _modelPath!);
 
-                    Debug.WriteLine($"Hand Result: {result}");
+                //    Debug.WriteLine($"Hand Result: {result}");
 
-                    CameraFrameService.Current.NotifyHandPredictResult(result);
+                //    CameraFrameService.Current.NotifyHandPredictResult(result);
                     
-                }
-                else
-                {
-                    Debug.WriteLine("No hand landmarks");
-                }
+                //}
+                //else
+                //{
+                //    Debug.WriteLine("No hand landmarks");
+                //}
                 _isProcessing = false;
             }
         }
@@ -137,66 +137,66 @@ public class GestureClassificationService
             }
 
             var ret = "";
-            try
-            {
-                if (softwareBitmap != null)
-                {
-                    using IRandomAccessStream stream = new InMemoryRandomAccessStream();
+            //try
+            //{
+            //    if (softwareBitmap != null)
+            //    {
+            //        using IRandomAccessStream stream = new InMemoryRandomAccessStream();
 
-                    var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, stream);
+            //        var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, stream);
 
-                    // Set the software bitmap
-                    encoder.SetSoftwareBitmap(softwareBitmap);
+            //        // Set the software bitmap
+            //        encoder.SetSoftwareBitmap(softwareBitmap);
 
-                    await encoder.FlushAsync();
+            //        await encoder.FlushAsync();
 
-                    var image = new Bitmap(stream.AsStream());
+            //        var image = new Bitmap(stream.AsStream());
 
-                    var matData = OpenCvSharp.Extensions.BitmapConverter.ToMat(image);
+            //        var matData = OpenCvSharp.Extensions.BitmapConverter.ToMat(image);
 
-                    var mat2 = matData.CvtColor(OpenCvSharp.ColorConversionCodes.BGR2RGB);
+            //        var mat2 = matData.CvtColor(OpenCvSharp.ColorConversionCodes.BGR2RGB);
 
-                    var dataMeta = mat2.Data;
+            //        var dataMeta = mat2.Data;
 
-                    var length = mat2.Width * mat2.Height * mat2.Channels();
+            //        var length = mat2.Width * mat2.Height * mat2.Channels();
 
-                    var data = new byte[length];
+            //        var data = new byte[length];
 
-                    Marshal.Copy(dataMeta, data, 0, length);
+            //        Marshal.Copy(dataMeta, data, 0, length);
 
-                    var widthStep = (int)mat2.Step();
+            //        var widthStep = (int)mat2.Step();
 
-                    var imgframe = new ImageFrame(ImageFormat.Types.Format.Srgb, mat2.Width, mat2.Height, widthStep, data);
+            //        var imgframe = new ImageFrame(ImageFormat.Types.Format.Srgb, mat2.Width, mat2.Height, widthStep, data);
 
-                    var handsOutput = _calculator!.Compute(imgframe);
+            //        var handsOutput = _calculator!.Compute(imgframe);
 
-                    if (handsOutput.MultiHandLandmarks != null)
-                    {
-                        var landmarks = handsOutput.MultiHandLandmarks[0].Landmark;
+            //        if (handsOutput.MultiHandLandmarks != null)
+            //        {
+            //            var landmarks = handsOutput.MultiHandLandmarks[0].Landmark;
 
-                        Debug.WriteLine($"Got hands output with {landmarks.Count} landmarks");
+            //            Debug.WriteLine($"Got hands output with {landmarks.Count} landmarks");
 
-                        var result = HandDataFormatHelper.PredictResult(landmarks.ToList(), _modelPath!);
+            //            var result = HandDataFormatHelper.PredictResult(landmarks.ToList(), _modelPath!);
 
-                        Debug.WriteLine($"Hand Result: {result}");
+            //            Debug.WriteLine($"Hand Result: {result}");
 
-                        CameraFrameService.Current.NotifyHandPredictResult(result);
+            //            CameraFrameService.Current.NotifyHandPredictResult(result);
 
-                    }
-                    else
-                    {
-                        Debug.WriteLine("No hand landmarks");
-                    }
+            //        }
+            //        else
+            //        {
+            //            Debug.WriteLine("No hand landmarks");
+            //        }
 
                    
-                    tcs.TrySetResult(ret);
-                }
-                //todo:
-            }
-            catch (Exception e)
-            {
-                tcs.TrySetException(e);
-            }
+            //        tcs.TrySetResult(ret);
+            //    }
+            //    //todo:
+            //}
+            //catch (Exception e)
+            //{
+            //    tcs.TrySetException(e);
+            //}
         }
 
         Interlocked.Exchange(ref _isSending, 0);

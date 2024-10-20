@@ -195,12 +195,12 @@ public partial class AddEmojisDialogViewModel : ObservableRecipient
 
         var size = propList.Size;
 
-        if (size > 1 * 1000 * 1000)
-        {
-            ToastHelper.SendToast("EmojisFileSize".GetLocalized(), TimeSpan.FromSeconds(3));
+        //if (size > 1 * 1000 * 1000)
+        //{
+        //    ToastHelper.SendToast("EmojisFileSize".GetLocalized(), TimeSpan.FromSeconds(3));
 
-            return;
-        }
+        //    return;
+        //}
 
         var folder = ApplicationData.Current.LocalFolder;
 

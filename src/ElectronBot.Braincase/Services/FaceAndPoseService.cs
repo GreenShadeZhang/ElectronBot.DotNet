@@ -16,6 +16,8 @@ using Verdure.ElectronBot.Core.Models;
 using Windows.Graphics;
 using System.Text;
 using System.IO;
+using SixLabors.ImageSharp.Processing;
+using NAudio.Wave;
 
 namespace Services;
 public class FaceAndPoseService
@@ -91,52 +93,82 @@ public class FaceAndPoseService
 
                         await encoderFace.FlushAsync();
 
-                        using var imageFace = new System.Drawing.Bitmap(faceStream.AsStream());
+                        byte[] pixelBytes;
 
-                        var matFace = OpenCvSharp.Extensions.BitmapConverter.ToMat(imageFace);
+                        using (DataReader dataReader = new DataReader(faceStream.GetInputStreamAt(0)))
+                        {
+                            var streamSize = (uint)faceStream.Size;
+                            await dataReader.LoadAsync(streamSize);
+                            pixelBytes = new byte[streamSize];
+                            dataReader.ReadBytes(pixelBytes);
+                        }
 
-                        var matFace1 = matFace.Resize(new OpenCvSharp.Size(240, 240), 0, 0, OpenCvSharp.InterpolationFlags.Area);
+                        //使用ImageSharp处理帧数据
+                        using var image2 = SixLabors.ImageSharp.Image
+                            .LoadPixelData<SixLabors.ImageSharp.PixelFormats.Rgba32>(pixelBytes,
+                            (int)face.PixelWidth, (int)face.PixelHeight);
 
-                        var matFace2 = matFace1.CvtColor(OpenCvSharp.ColorConversionCodes.RGBA2BGR);
+                        image2.Mutate(x =>
+                        {
+                            x.Resize(240, 240);
+                        });
 
-                        var dataMetaFace = matFace2.Data;
+                        // 获取转换后的数据
+                        var rgbData = new byte[image2.Width * image2.Height * 3];
 
-                        var faceData = new byte[240 * 240 * 3];
-
-                        Marshal.Copy(dataMetaFace, faceData, 0, 240 * 240 * 3);
-
-                        _faceData = faceData;
+                        // 遍历每个像素，将Rgba32转换为Bgr24
+                        for (var y = 0; y < image2.Height; y++)
+                        {
+                            for (var x = 0; x < image2.Width; x++)
+                            {
+                                var rgbaPixel = image2[x, y];
+                                var rgbIndex = (y * image2.Width + x) * 3;
+                                rgbData[rgbIndex] = rgbaPixel.B;
+                                rgbData[rgbIndex + 1] = rgbaPixel.G;
+                                rgbData[rgbIndex + 2] = rgbaPixel.R;
+                            }
+                        }
+                        _faceData = rgbData;
                     }
 
 
-                    
+                    byte[] pixelBytes2;
 
-                    //using IRandomAccessStream stream = new InMemoryRandomAccessStream();
+                    using (DataReader dataReader = new DataReader(softwareBitmap.GetInputStreamAt(0)))
+                    {
+                        var streamSize = (uint)softwareBitmap.Size;
+                        await dataReader.LoadAsync(streamSize);
+                        pixelBytes2 = new byte[streamSize];
+                        dataReader.ReadBytes(pixelBytes2);
+                    }
 
-                    //var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, stream);
+                    //使用ImageSharp处理帧数据
+                    using var image3 = SixLabors.ImageSharp.Image
+                        .LoadPixelData<SixLabors.ImageSharp.PixelFormats.Rgba32>(pixelBytes2,
+                        (int)face.PixelWidth, (int)face.PixelHeight);
 
-                    //// Set the software bitmap
-                    //encoder.SetSoftwareBitmap(softwareBitmap);
+                    image3.Mutate(x =>
+                    {
+                        x.Resize(240, 240);
+                    });
 
-                    //await encoder.FlushAsync();
+                    // 获取转换后的数据
+                    var rgbData2 = new byte[image3.Width * image3.Height * 3];
 
-                    using var image = new Bitmap(softwareBitmap.AsStream());
+                    // 遍历每个像素，将Rgba32转换为Bgr24
+                    for (var y = 0; y < image3.Height; y++)
+                    {
+                        for (var x = 0; x < image3.Width; x++)
+                        {
+                            var rgbaPixel = image3[x, y];
+                            var rgbIndex = (y * image3.Width + x) * 3;
+                            rgbData2[rgbIndex] = rgbaPixel.B;
+                            rgbData2[rgbIndex + 1] = rgbaPixel.G;
+                            rgbData2[rgbIndex + 2] = rgbaPixel.R;
+                        }
+                    }
 
-                    var matData = OpenCvSharp.Extensions.BitmapConverter.ToMat(image);
-
-                    var mat2 = matData.CvtColor(OpenCvSharp.ColorConversionCodes.BGR2RGB);
-
-                    var dataMeta = mat2.Data;
-
-                    var length = mat2.Width * mat2.Height * mat2.Channels();
-
-                    var data = new byte[length];
-
-                    Marshal.Copy(dataMeta, data, 0, length);
-
-                    var widthStep = (int)mat2.Step();
-
-                    using var imgFrame = new ImageFrame(ImageFormat.Types.Format.Srgb, mat2.Width, mat2.Height, widthStep, data);
+                    using var imgFrame = new ImageFrame(ImageFormat.Types.Format.Srgb, image3.Width, image3.Height, rgbData2.Length, rgbData2);
 
                     var poseOutput = _calculator!.Compute(imgFrame);
 
