@@ -2,9 +2,9 @@ using BotSharp.Abstraction.Conversations.Models;
 
 namespace Verdure.Plugin.Copilot.Functions;
 
-public class GetOrderStatusFn : IFunctionCallback
+public class GetWeatherFn : IFunctionCallback
 {
-    public string Name => "get_order_status";
+    public string Name => "get_weather";
 
     public async Task<bool> Execute(RoleDialogModel message)
     {

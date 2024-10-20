@@ -77,7 +77,7 @@ public partial class AgentViewModel : ObservableRecipient, INavigationAware
 
         var result = await _conversationService.NewConversation(new BotSharp.Abstraction.Conversations.Models.Conversation
         {
-            AgentId = "8970b1e5-d260-4e2c-90b1-f1415a257c18",
+            AgentId = Verdure.Plugin.Copilot.Enums.VerdureAgentId.VerdureId,
             UserId = _userIdentity.Id
         });
 

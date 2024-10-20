@@ -3,11 +3,11 @@ using BotSharp.Abstraction.Agents.Enums;
 
 namespace Verdure.Plugin.Copilot.Hooks;
 
-public class PizzaBotAgentHook : AgentHookBase
+public class VerdureCopilotAgentHook : AgentHookBase
 {
     public override string SelfId => BuiltInAgentId.AIAssistant;
 
-    public PizzaBotAgentHook(IServiceProvider services, AgentSettings settings)
+    public VerdureCopilotAgentHook(IServiceProvider services, AgentSettings settings)
         : base(services, settings)
     {
     }

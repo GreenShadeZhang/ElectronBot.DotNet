@@ -3,12 +3,12 @@ using BotSharp.Abstraction.Conversations.Models;
 
 namespace Verdure.Plugin.Copilot.Functions;
 
-public class PlaceOrderFn : IFunctionCallback
+public class LearnWordsFn : IFunctionCallback
 {
-    public string Name => "place_an_order";
+    public string Name => "learn_words";
 
     private readonly IServiceProvider _service;
-    public PlaceOrderFn(IServiceProvider service)
+    public LearnWordsFn(IServiceProvider service)
     {
         _service = service;
     }

@@ -3,9 +3,9 @@ using System.Text.Json;
 
 namespace Verdure.Plugin.Copilot.Functions;
 
-public class GetPizzaPricesFn : IFunctionCallback
+public class ControlTheLightsFn : IFunctionCallback
 {
-    public string Name => "get_pizza_price";
+    public string Name => "control_the_lights";
 
     public async Task<bool> Execute(RoleDialogModel message)
     {
