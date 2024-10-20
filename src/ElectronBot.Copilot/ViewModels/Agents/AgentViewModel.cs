@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using BotSharp.Abstraction.Agents;
-using BotSharp.Abstraction.Agents.Enums;
 using BotSharp.Abstraction.Agents.Models;
 using BotSharp.Abstraction.Conversations;
 using BotSharp.Abstraction.Repositories.Filters;
@@ -9,6 +9,7 @@ using BotSharp.Abstraction.Users;
 using BotSharp.Abstraction.Users.Enums;
 using BotSharp.Abstraction.Users.Models;
 using BotSharp.Abstraction.Utilities;
+using BotSharp.Core.Plugins;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using ElectronBot.Braincase.Contracts.ViewModels;
@@ -20,11 +21,13 @@ public partial class AgentViewModel : ObservableRecipient, INavigationAware
     private readonly IConversationService _conversationService;
     private readonly IUserIdentity _userIdentity;
     private readonly IUserService _userService;
-    public AgentViewModel(IConversationService conversationService, IUserIdentity userIdentity, IUserService userService)
+    private readonly IServiceProvider _services;
+    public AgentViewModel(IConversationService conversationService, IUserIdentity userIdentity, IUserService userService, IServiceProvider services)
     {
         _conversationService = conversationService;
         _userIdentity = userIdentity;
         _userService = userService;
+        _services = services;
     }
 
     [ObservableProperty]
@@ -51,14 +54,32 @@ public partial class AgentViewModel : ObservableRecipient, INavigationAware
                 Type = UserType.Client,
             });
         }
-        var result = await _conversationService.NewConversation(new BotSharp.Abstraction.Conversations.Models.Conversation
+
+        var loader = Ioc.Default.GetRequiredService<PluginLoader>();
+        var plugins = loader.GetPagedPlugins(_services, new BotSharp.Abstraction.Plugins.Models.PluginFilter
         {
-            AgentId = BuiltInAgentId.Chatbot,
-            UserId = _userIdentity.Id
-        });
+            Pager = new Pagination
+            {
+                Page = 1,
+                Size = 100
+            }
+        }).Items.ToList();
 
         var agentService = Ioc.Default.GetRequiredService<IAgentService>();
+
         var resultData = await agentService.RefreshAgents();
+
+
+        foreach (var plugin in plugins)
+        {
+            _ = loader.UpdatePluginStatus(_services, plugin.Id, true);
+        }
+
+        var result = await _conversationService.NewConversation(new BotSharp.Abstraction.Conversations.Models.Conversation
+        {
+            AgentId = "8970b1e5-d260-4e2c-90b1-f1415a257c18",
+            UserId = _userIdentity.Id
+        });
 
         Agents = (await agentService.GetAgents(new AgentFilter
         {
