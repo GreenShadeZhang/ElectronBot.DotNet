@@ -9,9 +9,11 @@ using ElectronBot.DotNet.LibUsb;
 using ElectronBot.DotNet.WinUsb;
 using Helpers;
 using Microsoft.Extensions.Logging;
+using Microsoft.Graphics.Canvas;
 using Microsoft.Win32;
 using Models;
 using Services;
+using SixLabors.ImageSharp.Processing;
 using Verdure.ElectronBot.Core.Models;
 using Verdure.IoT.Net;
 using Windows.ApplicationModel;
@@ -188,6 +190,9 @@ public class ElectronBotHelper
 
 
         mediaPlayer.MediaEnded += MediaPlayer_MediaEnded;
+        mediaPlayer.VideoFrameAvailable += MediaPlayer_VideoFrameAvailable;
+
+        mediaPlayer.IsVideoFrameServerEnabled = true;
 
         PlayEmojisRandom += ElectronBotHelper_PlayEmojisRandom;
 
@@ -229,21 +234,21 @@ public class ElectronBotHelper
     {
         App.MainWindow.DispatcherQueue.TryEnqueue(() =>
         {
-            ToastHelper.SendToast("Hw75ConnectedText".GetLocalized(), TimeSpan.FromSeconds(3));  
+            ToastHelper.SendToast("Hw75ConnectedText".GetLocalized(), TimeSpan.FromSeconds(3));
         });
         await Task.Run(async () =>
         {
             await Hw75GlobalTimerHelper.Instance.UpdateTimerIntervalAsync();
             await Hw75GlobalTimerHelper.Instance.UpdateHwViewAsync();
             Hw75GlobalTimerHelper.Instance.StartTimer();
-        });        
+        });
     }
 
     private void OnHidDeviceRemoved(DeviceWatcher sender, DeviceInformationUpdate args)
     {
         App.MainWindow.DispatcherQueue.TryEnqueue(() =>
         {
-            ToastHelper.SendToast("Hw75DisconnectedText".GetLocalized(), TimeSpan.FromSeconds(3));   
+            ToastHelper.SendToast("Hw75DisconnectedText".GetLocalized(), TimeSpan.FromSeconds(3));
         });
         Hw75GlobalTimerHelper.Instance.StopTimer();
     }
@@ -305,7 +310,7 @@ public class ElectronBotHelper
 
             //InvokeClockCanvasStart();
 
-            await ConnectDeviceAsync();            
+            await ConnectDeviceAsync();
         }
         catch (Exception ex)
         {
@@ -853,5 +858,53 @@ public class ElectronBotHelper
         {
             await SessionHaSwitchAsync(e.Reason);
         }
+    }
+
+    private async void MediaPlayer_VideoFrameAvailable(MediaPlayer sender, object args)
+    {
+        CanvasDevice canvasDevice = CanvasDevice.GetSharedDevice();
+
+        using var _canvasRenderTarget = new CanvasRenderTarget(canvasDevice, (float)sender.PlaybackSession.NaturalVideoWidth, (float)sender.PlaybackSession.NaturalVideoHeight, 96);
+
+        // 将视频帧复制到CanvasRenderTarget
+        sender.CopyFrameToVideoSurface(_canvasRenderTarget);
+
+        // 获取帧数据
+        using var ds = _canvasRenderTarget.CreateDrawingSession();
+        var pixelBytes = _canvasRenderTarget.GetPixelBytes();
+
+        //使用ImageSharp处理帧数据
+        using var image = SixLabors.ImageSharp.Image
+            .LoadPixelData<SixLabors.ImageSharp.PixelFormats.Rgba32>(pixelBytes,
+            (int)_canvasRenderTarget.SizeInPixels.Width, (int)_canvasRenderTarget.SizeInPixels.Height);
+
+        image.Mutate(x =>
+        {
+            x.Resize(240, 240);
+        });
+
+        // 获取转换后的数据
+        var rgbData = new byte[image.Width * image.Height * 3];
+
+        // 遍历每个像素，将Rgba32转换为Rgb24
+        for (var y = 0; y < image.Height; y++)
+        {
+            for (var x = 0; x < image.Width; x++)
+            {
+                var rgbaPixel = image[x, y];
+                var rgbIndex = (y * image.Width + x) * 3;
+                rgbData[rgbIndex] = rgbaPixel.R;
+                rgbData[rgbIndex + 1] = rgbaPixel.G;
+                rgbData[rgbIndex + 2] = rgbaPixel.B;
+            }
+        }
+
+        // 处理rgbData...
+
+        var service = Ioc.Default.GetRequiredService<EmoticonActionFrameService>();
+
+        var frameData = new EmoticonActionFrame(rgbData, true);
+
+        _ = await service.SendToUsbDeviceAsync(frameData);
     }
 }
