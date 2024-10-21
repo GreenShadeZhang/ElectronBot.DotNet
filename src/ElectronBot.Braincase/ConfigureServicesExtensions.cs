@@ -32,6 +32,8 @@ using Microsoft.UI.Xaml.Media.Imaging;
 using Services;
 using Verdure.ElectronBot.Core.Contracts.Services;
 using Verdure.ElectronBot.Core.Services;
+using Verdure.WinUI.Common;
+using Verdure.WinUI.Common.Players;
 using Verdure.WinUI.Common.Services;
 using ViewModels;
 using Views;
@@ -91,6 +93,10 @@ public static class ConfigureServicesExtensions
             .AddTransient<IElectronLowLevel, WinUsbElectronLowLevel>()
 
             .AddTransient<IElectronLowLevel, LibUsbElectronLowLevel>()
+
+            .AddSingleton<IElectronBotPlayer, ElectronBotPlayer>()
+
+            .AddSingleton<IEmoticonActionFrameService, EmoticonActionFrameService>()
 
             .AddTransient<MediaPlayer>()
 

@@ -1,6 +1,5 @@
 ﻿using System.Collections.ObjectModel;
 using System.Text.Json;
-using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Contracts.Services;
@@ -12,6 +11,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Models;
 using Verdure.ElectronBot.Core.Helpers;
+using Verdure.WinUI.Common;
 using Verdure.WinUI.Common.Helpers;
 using Verdure.WinUI.Common.Models;
 using Windows.ApplicationModel;
@@ -21,60 +21,64 @@ namespace ElectronBot.Braincase.ViewModels;
 
 public partial class EmojisEditViewModel : ObservableRecipient
 {
-    private ObservableCollection<EmoticonAction> _actions = new();
-
-    private ElementTheme _elementTheme;
-
-    private readonly IActionExpressionProvider _actionExpressionProvider;
-
-    private ICommand _loadedCommand;
-    public ICommand LoadedCommand => _loadedCommand ??= new RelayCommand(OnLoaded);
-
-    private ICommand _addEmojisVideoCommand;
-    public ICommand AddEmojisVideoCommand => _addEmojisVideoCommand ??= new RelayCommand(AddEmojisVideo);
-
-
-    private ICommand _openEmojisEditDialogCommand;
-    public ICommand OpenEmojisEditDialogCommand => _openEmojisEditDialogCommand ??= new RelayCommand(EmojisEditDialogEmojis);
-
-    private ICommand _saveEmojisCommand;
-    public ICommand SaveEmojisCommand => _saveEmojisCommand ??= new RelayCommand(SaveEmojis);
-
-    private ICommand _playEmojisCommand;
-    public ICommand PlayEmojisCommand => _playEmojisCommand ??= new RelayCommand<object>(PlayEmojis);
-
-    private ICommand _emojisInfoCommand;
-    public ICommand EmojisInfoCommand => _emojisInfoCommand ??= new RelayCommand<object>(EmojisInfo);
-
-    private string _mojisName;
-    private string _mojisNameId;
-    private string _emojisDesc;
-    private string _mojisAvatar;
-    private string _emojisVideoUrl;
+    private readonly ElementTheme _elementTheme;
 
     private readonly ILocalSettingsService _localSettingsService;
 
     private readonly IEmojisFileService _emojisFileService;
 
+    private readonly IElectronBotPlayer _electronBotPlayer;
+
 
     private readonly IntPtr _hwnd = WinRT.Interop.WindowNative.GetWindowHandle(App.MainWindow);
-    public EmojisEditViewModel(IActionExpressionProvider actionExpressionProvider,
-        ILocalSettingsService localSettingsService,
+    public EmojisEditViewModel(ILocalSettingsService localSettingsService,
         IEmojisFileService emojisFileService,
-        IThemeSelectorService themeSelectorService)
+        IThemeSelectorService themeSelectorService,
+        IElectronBotPlayer electronBotPlayer)
     {
-        _actionExpressionProvider = actionExpressionProvider;
         _localSettingsService = localSettingsService;
         _emojisFileService = emojisFileService;
         _elementTheme = themeSelectorService.Theme;
+        _electronBotPlayer = electronBotPlayer;
     }
+
+    [ObservableProperty]
+    private ObservableCollection<EmoticonAction> _actions = new();
+    /// <summary>
+    /// 表情名称
+    /// </summary>
+    [ObservableProperty]
+    private string _emojisName = string.Empty;
+    /// <summary>
+    /// 表情标识
+    /// </summary>
+    [ObservableProperty]
+    private string _emojisNameId = string.Empty;
+
+    /// <summary>
+    /// 表情描述
+    /// </summary>
+    [ObservableProperty]
+    private string _emojisDesc = string.Empty;
+
+    /// <summary>
+    /// 表情图片
+    /// </summary>
+    [ObservableProperty]
+    private string _emojisAvatar = string.Empty;
+
+    /// <summary>
+    /// 表情视频存储地址
+    /// </summary>
+    [ObservableProperty]
+    private string _emojisVideoUrl = string.Empty;
 
     /// <summary>
     /// 导出表情
     /// </summary>
     /// <param name="obj"></param>
     [RelayCommand]
-    public async void ExportEmojis(object? obj)
+    public async Task ExportEmojisAsync(object? obj)
     {
         if (obj == null)
         {
@@ -96,12 +100,11 @@ public partial class EmojisEditViewModel : ObservableRecipient
             {
                 ToastHelper.SendToast($"导出错误-{ex.Message}", TimeSpan.FromSeconds(3));
             }
-            //ToastHelper.SendToast("导出成功", TimeSpan.FromSeconds(3));
         }
     }
 
     [RelayCommand]
-    public async void Marketplace()
+    public async Task MarketplaceAsync()
     {
         try
         {
@@ -123,9 +126,9 @@ public partial class EmojisEditViewModel : ObservableRecipient
         }
     }
 
-    private void MarketplaceDialog_Closed(ContentDialog sender, ContentDialogClosedEventArgs args)
+    private async void MarketplaceDialog_Closed(ContentDialog sender, ContentDialogClosedEventArgs args)
     {
-        OnLoaded();
+        await OnLoadedAsync();
     }
 
     /// <summary>
@@ -240,7 +243,7 @@ public partial class EmojisEditViewModel : ObservableRecipient
     }
 
     [RelayCommand]
-    public async void DelEmojis(object? obj)
+    public async Task DelEmojisAsync(object? obj)
     {
         if (obj == null)
         {
@@ -292,7 +295,8 @@ public partial class EmojisEditViewModel : ObservableRecipient
         }
     }
 
-    private void PlayEmojis(object? obj)
+    [RelayCommand]
+    public async Task PlayEmojisAsync(object? obj)
     {
         if (obj == null)
         {
@@ -350,8 +354,7 @@ public partial class EmojisEditViewModel : ObservableRecipient
                 {
                     videoPath = emojis.EmojisVideoPath;
                 }
-                //_actionExpressionProvider.PlayActionExpressionAsync(emojis, actions);
-                _ = ElectronBotHelper.Instance.MediaPlayerPlaySoundAsync(videoPath, actions);
+                await _electronBotPlayer.PlayVideoByPathAsync(videoPath, actions);
             }
             catch (Exception)
             {
@@ -360,7 +363,8 @@ public partial class EmojisEditViewModel : ObservableRecipient
         }
     }
 
-    private async void EmojisInfo(object? obj)
+    [RelayCommand]
+    public async Task EmojisInfoAsync(object? obj)
     {
         try
         {
@@ -392,7 +396,7 @@ public partial class EmojisEditViewModel : ObservableRecipient
     }
 
     [RelayCommand]
-    private async void UploadEmojis(object? obj)
+    private async Task UploadEmojisAsync(object? obj)
     {
         try
         {
@@ -467,7 +471,8 @@ public partial class EmojisEditViewModel : ObservableRecipient
         }
     }
 
-    private void SaveEmojis()
+    [RelayCommand]
+    public void SaveEmojisAsync()
     {
         Actions.Add(new EmoticonAction()
         {
@@ -479,7 +484,8 @@ public partial class EmojisEditViewModel : ObservableRecipient
         });
     }
 
-    private async void EmojisEditDialogEmojis()
+    [RelayCommand]
+    public async Task OpenEmojisEditDialogAsync()
     {
         try
         {
@@ -577,8 +583,8 @@ public partial class EmojisEditViewModel : ObservableRecipient
         }
     }
 
-
-    private async void AddEmojisVideo()
+    [RelayCommand]
+    public async Task AddEmojisVideoAsync()
     {
         if (string.IsNullOrWhiteSpace(EmojisNameId))
         {
@@ -613,58 +619,8 @@ public partial class EmojisEditViewModel : ObservableRecipient
         EmojisVideoUrl = storageFile.Path;
     }
 
-    /// <summary>
-    /// 表情名称
-    /// </summary>
-    public string EmojisName
-    {
-        get => _mojisName;
-        set => SetProperty(ref _mojisName, value);
-    }
-
-    /// <summary>
-    /// 表情标识
-    /// </summary>
-    public string EmojisNameId
-    {
-        get => _mojisNameId;
-        set => SetProperty(ref _mojisNameId, value);
-    }
-
-    /// <summary>
-    /// 表情图片
-    /// </summary>
-    public string EmojisAvatar
-    {
-        get => _mojisAvatar;
-        set => SetProperty(ref _mojisAvatar, value);
-    }
-
-    /// <summary>
-    /// 表情描述
-    /// </summary>
-    public string EmojisDesc
-    {
-        get => _emojisDesc;
-        set => SetProperty(ref _emojisDesc, value);
-    }
-
-    /// <summary>
-    /// 表情视频存储地址
-    /// </summary>
-    public string EmojisVideoUrl
-    {
-        get => _emojisVideoUrl;
-        set => SetProperty(ref _emojisVideoUrl, value);
-    }
-
-    public ObservableCollection<EmoticonAction> Actions
-    {
-        get => _actions;
-        set => SetProperty(ref _actions, value);
-    }
-
-    private async void OnLoaded()
+    [RelayCommand]
+    public async Task OnLoadedAsync()
     {
         Actions.Clear();
         var list = (await _localSettingsService

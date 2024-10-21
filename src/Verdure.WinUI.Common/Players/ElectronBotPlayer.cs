@@ -93,8 +93,6 @@ public partial class ElectronBotPlayer : IElectronBotPlayer, IDisposable
             currentAction = _actions[actionCount];
         }
 
-        var service = Ioc.Default.GetRequiredService<IEmoticonActionFrameService>();
-
         var frameData = new EmoticonActionFrame(rgbData, true,
             currentAction.J1,
             currentAction.J2,
@@ -103,7 +101,7 @@ public partial class ElectronBotPlayer : IElectronBotPlayer, IDisposable
             currentAction.J5,
             currentAction.J6);
 
-        _ = await service.SendToUsbDeviceAsync(frameData);
+        _ = await _actionFrameService.SendToUsbDeviceAsync(frameData);
     }
     private void MediaPlayer_MediaEnded(MediaPlayer sender, object args)
     {
