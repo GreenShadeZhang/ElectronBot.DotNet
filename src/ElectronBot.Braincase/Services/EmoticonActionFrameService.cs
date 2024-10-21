@@ -1,9 +1,10 @@
 ﻿using System.Collections.Concurrent;
 using ElectronBot.Braincase.Helpers;
+using Verdure.ElectronBot.Core.Contracts.Services;
 using Verdure.ElectronBot.Core.Models;
 
-namespace Services;
-public class EmoticonActionFrameService
+namespace ElectronBot.Braincase.Services;
+public class EmoticonActionFrameService : IEmoticonActionFrameService
 {
     private readonly ConcurrentQueue<(EmoticonActionFrame Data, TaskCompletionSource<bool> Tcs, CancellationToken Ct)> _queue = new();
 

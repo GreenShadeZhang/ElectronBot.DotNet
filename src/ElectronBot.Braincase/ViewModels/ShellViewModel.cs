@@ -9,7 +9,6 @@ using ElectronBot.Braincase.Services;
 using ElectronBot.Braincase.Views;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using Services;
 using Microsoft.UI.Windowing;
 
 namespace ElectronBot.Braincase.ViewModels;

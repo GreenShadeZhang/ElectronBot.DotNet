@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ElectronBot.Braincase.Models;
 using Verdure.ElectronBot.Core.Models;
+using Verdure.WinUI.Common.Models;
 
 namespace ElectronBot.Braincase.Contracts.Services;
 public interface IActionExpressionProvider

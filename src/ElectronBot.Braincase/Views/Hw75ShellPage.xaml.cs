@@ -7,6 +7,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Verdure.NotificationArea;
+using Verdure.WinUI.Common.Helpers;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Background;
 using Windows.System;

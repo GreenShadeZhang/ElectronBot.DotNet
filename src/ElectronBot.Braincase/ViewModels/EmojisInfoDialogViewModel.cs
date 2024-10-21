@@ -8,6 +8,8 @@ using ElectronBot.Braincase.Helpers;
 using ElectronBot.Braincase.Models;
 using Microsoft.UI.Xaml;
 using Verdure.ElectronBot.Core.Models;
+using Verdure.WinUI.Common.Helpers;
+using Verdure.WinUI.Common.Models;
 using Windows.ApplicationModel;
 using Windows.Storage;
 

@@ -1,11 +1,11 @@
 ﻿using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
-using ElectronBot.Braincase.Models;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Verdure.ElectronBot.Core.Models;
+using Verdure.WinUI.Common.Models;
 using Image = Microsoft.UI.Xaml.Controls.Image;
 
 namespace ElectronBot.Braincase.ViewModels;

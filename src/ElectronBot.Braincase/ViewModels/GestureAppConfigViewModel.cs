@@ -10,6 +10,7 @@ using ElectronBot.Braincase.Helpers;
 using ElectronBot.Braincase.Models;
 using Microsoft.UI.Xaml.Controls;
 using Models;
+using Verdure.WinUI.Common.Helpers;
 using Windows.ApplicationModel;
 using Windows.Management.Deployment;
 using Windows.Storage;

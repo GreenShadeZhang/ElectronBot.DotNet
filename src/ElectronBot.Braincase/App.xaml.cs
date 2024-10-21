@@ -7,7 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Services;
+using Verdure.WinUI.Common.Helpers;
 
 namespace ElectronBot.Braincase;
 

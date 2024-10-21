@@ -18,6 +18,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Services;
+using Verdure.WinUI.Common.Helpers;
 using Windows.ApplicationModel;
 using Windows.Graphics.Imaging;
 using Image = Microsoft.UI.Xaml.Controls.Image;

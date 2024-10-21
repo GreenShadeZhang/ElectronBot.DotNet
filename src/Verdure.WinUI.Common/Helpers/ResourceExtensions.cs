@@ -1,6 +1,6 @@
 ﻿using Microsoft.Windows.ApplicationModel.Resources;
 
-namespace ElectronBot.Braincase.Helpers;
+namespace Verdure.WinUI.Common.Helpers;
 
 public static class ResourceExtensions
 {

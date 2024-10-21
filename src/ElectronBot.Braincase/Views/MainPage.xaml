@@ -7,7 +7,7 @@
     xmlns:i="using:Microsoft.Xaml.Interactivity"
     xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:model="using:ElectronBot.Braincase.Models"
+    xmlns:model="using:Verdure.WinUI.Common.Models"
     mc:Ignorable="d">
 
     <Grid x:Name="ContentArea">

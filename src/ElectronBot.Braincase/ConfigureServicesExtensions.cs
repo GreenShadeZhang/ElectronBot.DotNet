@@ -32,6 +32,7 @@ using Microsoft.UI.Xaml.Media.Imaging;
 using Services;
 using Verdure.ElectronBot.Core.Contracts.Services;
 using Verdure.ElectronBot.Core.Services;
+using Verdure.WinUI.Common.Services;
 using ViewModels;
 using Views;
 using Windows.Media.Playback;

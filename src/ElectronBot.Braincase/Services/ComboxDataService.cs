@@ -1,6 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using Verdure.ElectronBot.Core.Models;
-using ElectronBot.Braincase.Helpers;
+using Verdure.WinUI.Common.Helpers;
 
 namespace ElectronBot.Braincase.Services;
 public class ComboxDataService

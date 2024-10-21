@@ -19,6 +19,7 @@ using Microsoft.UI.Xaml.Media.Imaging;
 using Services;
 using SharpDX;
 using Verdure.ElectronBot.Core.Models;
+using Verdure.WinUI.Common.Helpers;
 using Windows.ApplicationModel;
 using Windows.Graphics.Imaging;
 using Windows.Media;

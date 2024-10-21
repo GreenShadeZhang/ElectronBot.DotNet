@@ -13,6 +13,7 @@ using Windows.Media.Capture;
 using Windows.Media.Capture.Frames;
 using Windows.Storage.Streams;
 using Mediapipe.Net.Solutions;
+using Verdure.WinUI.Common.Helpers;
 
 namespace ElectronBot.Braincase.Services;
 

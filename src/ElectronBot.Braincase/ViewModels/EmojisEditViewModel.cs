@@ -12,6 +12,8 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Models;
 using Verdure.ElectronBot.Core.Helpers;
+using Verdure.WinUI.Common.Helpers;
+using Verdure.WinUI.Common.Models;
 using Windows.ApplicationModel;
 using Windows.Storage;
 

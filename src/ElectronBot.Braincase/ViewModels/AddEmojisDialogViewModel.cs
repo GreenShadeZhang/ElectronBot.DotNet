@@ -9,6 +9,7 @@ using ElectronBot.Braincase.Helpers;
 using ElectronBot.Braincase.Models;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Imaging;
+using Verdure.WinUI.Common.Helpers;
 using Windows.Storage;
 
 namespace ElectronBot.Braincase.ViewModels;

@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using ElectronBot.Braincase.Helpers;
+using ElectronBot.Braincase.Services;
 using HelixToolkit.SharpDX.Core;
 using HelixToolkit.SharpDX.Core.Assimp;
 using HelixToolkit.SharpDX.Core.Model.Scene;
@@ -8,7 +9,6 @@ using Microsoft.UI;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
-using Services;
 using SharpDX;
 using Verdure.ElectronBot.Core.Models;
 using Windows.ApplicationModel;

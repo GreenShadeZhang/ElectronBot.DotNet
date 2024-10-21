@@ -4,6 +4,7 @@ using ElectronBot.Braincase.Contracts.Services;
 using ElectronBot.Braincase.Helpers;
 using Models;
 using Verdure.ElectronBot.Core.Models;
+using Verdure.WinUI.Common.Services;
 using Windows.Globalization;
 using Windows.Media.SpeechRecognition;
 using Windows.Media.SpeechSynthesis;

@@ -2,12 +2,12 @@
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text.Json;
-using ElectronBot.Braincase.Models;
+using ElectronBot.Braincase.Services;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media.Imaging;
-using Services;
 using SixLabors.ImageSharp.Processing;
 using Verdure.ElectronBot.Core.Models;
+using Verdure.WinUI.Common.Models;
 using Windows.Devices.Enumeration;
 using Windows.Graphics.Imaging;
 using Windows.Media.Devices;

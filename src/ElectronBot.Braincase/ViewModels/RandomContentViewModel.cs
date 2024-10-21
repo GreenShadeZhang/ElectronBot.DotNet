@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Input;
 using ElectronBot.Braincase.Contracts.Services;
 using ElectronBot.Braincase.Core.Models;
 using ElectronBot.Braincase.Helpers;
+using Verdure.WinUI.Common.Helpers;
 
 namespace ElectronBot.Braincase.ViewModels;
 

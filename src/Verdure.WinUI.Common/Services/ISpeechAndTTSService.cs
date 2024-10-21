@@ -1,7 +1,7 @@
 ﻿using Windows.Globalization;
 using Windows.Storage.Streams;
 
-namespace ElectronBot.Braincase.Contracts.Services;
+namespace Verdure.WinUI.Common.Services;
 public interface ISpeechAndTTSService
 {
     Task StartAsync();
