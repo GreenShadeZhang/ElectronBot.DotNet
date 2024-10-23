@@ -12,6 +12,8 @@
     <None Remove="Controls\Chat\ChatModuleInput.xaml" />
     <None Remove="Controls\Chat\ChatModuleMsgItemControl.xaml" />
     <None Remove="Controls\Chat\ChatModuleMsgList.xaml" />
+    <None Remove="Controls\Chat\ChatSessionListPanel.xaml" />
+    <None Remove="Controls\Chat\ColorfulBorder.xaml" />
     <None Remove="Controls\Chat\PresetAvatar.xaml" />
     <None Remove="Styles\Overwrites.xaml" />
     <None Remove="Views\Agents\AgentPage.xaml" />
@@ -34,6 +36,18 @@
   <ItemGroup>
     <ProjectReference Include="..\Verdure.Plugin.Copilot\Verdure.Plugin.Copilot.csproj" />
     <ProjectReference Include="..\Verdure.WinUI.Common\Verdure.WinUI.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Controls\Chat\ChatSessionListPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Controls\Chat\ColorfulBorder.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>

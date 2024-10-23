@@ -9,11 +9,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:BotSharp.Abstraction.Conversations.Models"
     mc:Ignorable="d">
-    <Grid
-        Width="560"
-        Height="440"
-        HorizontalAlignment="Left"
-        VerticalAlignment="Top">
+    <Grid>
         <controls:EmptyHolder
             Title="NoMessage"
             Description="NoMessageDescription"
@@ -38,6 +34,41 @@
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
+
+                    <Grid
+                        Margin="0,0,0,20"
+                        HorizontalAlignment="Left"
+                        Visibility="{x:Bind ViewModel.IsResponding, Mode=OneWay}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <controls:PresetAvatar
+                            x:Name="Avatar"
+                            Width="32"
+                            Height="32"
+                            Margin="0,0,8,0"
+                            VerticalAlignment="Top"
+                            CornerRadius="18"
+                            DefaultSymbol="Person"
+                            FontSize="16" />
+                        <controls:ColorfulBorder
+                            Grid.Column="1"
+                            MinWidth="240"
+                            MinHeight="40"
+                            BorderThickness="1"
+                            CornerRadius="{StaticResource ControlCornerRadius}"
+                            IsLoading="{x:Bind ViewModel.IsResponding, Mode=OneWay}" />
+                        <Grid
+                            Grid.Column="1"
+                            Margin="1"
+                            HorizontalAlignment="Stretch"
+                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                            CornerRadius="{StaticResource ControlCornerRadius}">
+                            <TextBlock Margin="12,8" Text="{x:Bind ViewModel.TempMessage, Mode=OneWay}" />
+                        </Grid>
+                    </Grid>
+
 
                     <StackPanel
                         Margin="0,0,0,12"

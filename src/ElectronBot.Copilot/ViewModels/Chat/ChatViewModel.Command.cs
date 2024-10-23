@@ -36,6 +36,8 @@ public partial class ChatViewModel
             CreatedAt = DateTime.UtcNow
         };
 
+        IsResponding = true;
+
         ChatMessageList.Add(inputMsg);
 
         RequestScrollToBottom?.Invoke(this, EventArgs.Empty);
@@ -56,6 +58,7 @@ public partial class ChatViewModel
                     _dispatcherQueue.TryEnqueue(() =>
                     {
                         ChatMessageList.Add(msg);
+                        IsResponding = false;
                         RequestScrollToBottom?.Invoke(this, EventArgs.Empty);
                     });
                 });
@@ -68,6 +71,24 @@ public partial class ChatViewModel
     {
         if (string.IsNullOrEmpty(sendText)) return Task.CompletedTask;
         return Task.CompletedTask;
+    }
+
+    [RelayCommand]
+    public async Task NewSessionAsync()
+    {
+        var result = await _conversationService.NewConversation(new Conversation
+        {
+            AgentId = Verdure.Plugin.Copilot.Enums.VerdureAgentId.VerdureId,
+            UserId = _userIdentity.Id
+        });
+
+        _conversationService.SetConversationId(result.Id, new List<MessageState>());
+
+        if (result != null)
+        {
+            ConversationList.Add(result);
+            SelectedConversation = result;
+        }
     }
 
 

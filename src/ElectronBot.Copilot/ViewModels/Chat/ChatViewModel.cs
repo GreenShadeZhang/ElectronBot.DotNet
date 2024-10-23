@@ -1,24 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading.Tasks;
 using BotSharp.Abstraction.Agents;
-using BotSharp.Abstraction.Agents.Enums;
-using BotSharp.Abstraction.Agents.Models;
 using BotSharp.Abstraction.Conversations;
 using BotSharp.Abstraction.Conversations.Models;
 using BotSharp.Abstraction.Models;
 using BotSharp.Abstraction.Repositories.Filters;
-using BotSharp.Abstraction.Routing;
 using BotSharp.Abstraction.Users;
 using BotSharp.Abstraction.Users.Enums;
 using BotSharp.Abstraction.Utilities;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
-using CommunityToolkit.Mvvm.Input;
 using ElectronBot.Braincase.Contracts.ViewModels;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Dispatching;
 
 
@@ -31,7 +24,9 @@ public partial class ChatViewModel : ObservableRecipient, INavigationAware
     private readonly IUserService _userService;
     private readonly IServiceProvider _services;
     private readonly DispatcherQueue _dispatcherQueue;
-    public ChatViewModel(IConversationService conversationService, IUserIdentity userIdentity, IUserService userService, IServiceProvider services)
+    public ChatViewModel(IConversationService conversationService, 
+        IUserIdentity userIdentity, 
+        IUserService userService, IServiceProvider services)
     {
         _conversationService = conversationService;
         _userIdentity = userIdentity;
@@ -89,7 +84,6 @@ public partial class ChatViewModel : ObservableRecipient, INavigationAware
         _conversationService.SetConversationId(SelectedConversation.Id, new List<MessageState>());
         var history = _conversationService.GetDialogHistory(fromBreakpoint: false);
         ChatMessageList = new ObservableCollection<RoleDialogModel>(history);
-
 
         RequestScrollToBottom?.Invoke(this, EventArgs.Empty);
     }
