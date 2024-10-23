@@ -19,6 +19,7 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using ElectronBot.Braincase.Contracts.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Dispatching;
 
 
 namespace ElectronBot.Copilot.ViewModels;
@@ -29,73 +30,15 @@ public partial class ChatViewModel : ObservableRecipient, INavigationAware
     private readonly IUserIdentity _userIdentity;
     private readonly IUserService _userService;
     private readonly IServiceProvider _services;
+    private readonly DispatcherQueue _dispatcherQueue;
     public ChatViewModel(IConversationService conversationService, IUserIdentity userIdentity, IUserService userService, IServiceProvider services)
     {
         _conversationService = conversationService;
         _userIdentity = userIdentity;
         _userService = userService;
         _services = services;
+        _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
     }
-
-    [ObservableProperty]
-    List<Agent> _agents = new();
-
-    [ObservableProperty]
-    ObservableCollection<Conversation> _conversationList = new();
-
-    [ObservableProperty]
-    ObservableCollection<RoleDialogModel> _chatMessageList = new();
-
-    [ObservableProperty]
-    Conversation? _selectedConversation;
-
-    [ObservableProperty]
-    string? _sendText;
-
-    [RelayCommand]
-    public Task ConvSelectAsync(Conversation? conv)
-    {
-        if (conv == null) return Task.CompletedTask;
-        _conversationService.SetConversationId(conv.Id, new List<MessageState>());
-        var history = _conversationService.GetDialogHistory(fromBreakpoint: false);
-        ChatMessageList = new ObservableCollection<RoleDialogModel>(history);
-        return Task.CompletedTask;
-    }
-
-    [RelayCommand]
-    public async Task SendChatAsync()
-    {
-        if (SelectedConversation == null) return;
-
-        if (string.IsNullOrEmpty(SendText)) return;
-
-        var inputMsg = new RoleDialogModel(AgentRole.User, SendText)
-        {
-            MessageId = Guid.NewGuid().ToString(),
-            CreatedAt = DateTime.UtcNow
-        };
-
-        var routing = _services.GetRequiredService<IRoutingService>();
-        routing.Context.SetMessageId(SelectedConversation.Id, inputMsg.MessageId);
-
-        _conversationService.SetConversationId(SelectedConversation.Id, new());
-
-        SendText = string.Empty;
-        await _conversationService.SendMessage(SelectedConversation.AgentId, inputMsg,
-            replyMessage: null,
-            async msg =>
-            {
-                ChatMessageList.Add(msg);
-            });
-    }
-
-    [RelayCommand]
-    public Task StartChatAsync(string? sendText)
-    {
-        if (string.IsNullOrEmpty(sendText)) return Task.CompletedTask;
-        return Task.CompletedTask;
-    }
-
 
     public void OnNavigatedFrom()
     {
@@ -126,7 +69,7 @@ public partial class ChatViewModel : ObservableRecipient, INavigationAware
             Pager = new Pagination
             {
                 Page = 1,
-                Size = 10
+                Size = 200
             }
         })).Items.ToList();
 
@@ -135,11 +78,19 @@ public partial class ChatViewModel : ObservableRecipient, INavigationAware
             Pager = new Pagination
             {
                 Page = 1,
-                Size = 10
+                Size = 200
             }
         })).Items.ToList();
 
         SelectedConversation = convList.FirstOrDefault();
         ConversationList = new ObservableCollection<Conversation>(convList);
+
+        if (SelectedConversation == null) return;
+        _conversationService.SetConversationId(SelectedConversation.Id, new List<MessageState>());
+        var history = _conversationService.GetDialogHistory(fromBreakpoint: false);
+        ChatMessageList = new ObservableCollection<RoleDialogModel>(history);
+
+
+        RequestScrollToBottom?.Invoke(this, EventArgs.Empty);
     }
 }

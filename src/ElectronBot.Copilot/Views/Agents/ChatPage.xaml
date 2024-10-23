@@ -3,6 +3,7 @@
     x:Class="ElectronBot.Copilot.Views.Agents.ChatPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:chat="using:ElectronBot.Copilot.Controls.Chat"
     xmlns:converters="using:CommunityToolkit.WinUI.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:i="using:Microsoft.Xaml.Interactivity"
@@ -18,13 +19,7 @@
                 TextWrapping="WrapWholeWords" />
         </DataTemplate>
 
-        <DataTemplate x:Key="UserMsgListViewTemplate" x:DataType="models:RoleDialogModel">
-            <TextBlock
-                Margin="0,8,0,8"
-                x:Phase="1"
-                Text="{x:Bind Content}"
-                TextWrapping="WrapWholeWords" />
-        </DataTemplate>
+
     </Page.Resources>
     <Grid x:Name="ContentArea">
         <Grid.ColumnDefinitions>
@@ -52,45 +47,8 @@
             </i:Interaction.Behaviors>
         </ListView>
         <StackPanel Grid.Column="1">
-            <ListView
-                x:Name="ChatList"
-                Width="560"
-                Height="440"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                BorderBrush="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"
-                BorderThickness="1"
-                IsItemClickEnabled="False"
-                ItemTemplate="{StaticResource UserMsgListViewTemplate}"
-                ItemsSource="{x:Bind ViewModel.ChatMessageList, Mode=OneWay}" />
-            <StackPanel Orientation="Horizontal">
-                <TextBox
-                    x:Name="SendTextTb"
-                    Width="320"
-                    Text="{x:Bind ViewModel.SendText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
-                <Button
-                    x:Uid="StartChat"
-                    Width="48"
-                    Height="36"
-                    Margin="2"
-                    BorderBrush="{ThemeResource SystemAccentColor}"
-                    BorderThickness="2"
-                    Command="{x:Bind ViewModel.SendChatCommand}"
-                    Foreground="{ThemeResource SystemAccentColor}">
-                    <FontIcon FontFamily="/Assets/Font/Segoe Fluent Icons.ttf#Segoe Fluent Icons" Glyph="&#xE724;" />
-                </Button>
-                <Button
-                    x:Uid="StartChat"
-                    Width="48"
-                    Height="36"
-                    Margin="2"
-                    BorderBrush="{ThemeResource SystemAccentColor}"
-                    BorderThickness="2"
-                    Command="{x:Bind ViewModel.StartChatCommand}"
-                    Foreground="{ThemeResource SystemAccentColor}">
-                    <FontIcon FontFamily="/Assets/Font/Segoe Fluent Icons.ttf#Segoe Fluent Icons" Glyph="&#xE720;" />
-                </Button>
-            </StackPanel>
+            <chat:ChatModuleMsgList ViewModel="{x:Bind ViewModel, Mode=OneWay}" />
+            <chat:ChatModuleInput ViewModel="{x:Bind ViewModel, Mode=OneWay}" />
         </StackPanel>
 
     </Grid>
