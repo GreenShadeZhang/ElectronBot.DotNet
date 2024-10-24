@@ -75,7 +75,7 @@
                     Command="{x:Bind ViewModel.NewSessionCommand, Mode=OneWay}"
                     IsEnabled="True"
                     Style="{StaticResource IconButtonStyle}">
-                    <ic:SymbolIcon FontSize="14" Symbol="ChatAdd" />
+                    <FontIcon FontFamily="/Assets/Font/Segoe Fluent Icons.ttf#Segoe Fluent Icons" Glyph="&#xE8F2;" />
                 </Button>
                 <!--<Button
                   x:Name="CleanMessageButton"

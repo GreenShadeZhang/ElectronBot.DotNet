@@ -19,6 +19,7 @@ public partial class ChatViewModel
         _conversationService.SetConversationId(conv.Id, new List<MessageState>());
         var history = _conversationService.GetDialogHistory(fromBreakpoint: false);
         ChatMessageList = new ObservableCollection<RoleDialogModel>(history);
+        SelectedConversation = conv;
         RequestScrollToBottom?.Invoke(this, EventArgs.Empty);
         return Task.CompletedTask;
     }
@@ -86,7 +87,7 @@ public partial class ChatViewModel
 
         if (result != null)
         {
-            ConversationList.Add(result);
+            ConversationList.Insert(0, result);
             SelectedConversation = result;
         }
     }

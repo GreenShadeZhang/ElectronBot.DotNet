@@ -5,10 +5,16 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:ElectronBot.Copilot.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
     xmlns:local="using:ElectronBot.Copilot.Controls.Chat"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:BotSharp.Abstraction.Conversations.Models"
+    xmlns:myconverters="using:Verdure.WinUI.Common.Converters"
     mc:Ignorable="d">
+    <local:ChatModuleControl.Resources>
+        <myconverters:UtcToLocalTimeConverter x:Key="UtcToLocalTimeConverter" />
+    </local:ChatModuleControl.Resources>
     <Grid>
         <controls:EmptyHolder
             Title="NoMessage"
@@ -25,7 +31,7 @@
                     <ItemsControl Margin="0,0,0,20" ItemsSource="{x:Bind ViewModel.ChatMessageList, Mode=OneWay}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <ItemsStackPanel />
+                                <ItemsStackPanel ItemsUpdatingScrollMode="KeepLastItemInView" />
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>

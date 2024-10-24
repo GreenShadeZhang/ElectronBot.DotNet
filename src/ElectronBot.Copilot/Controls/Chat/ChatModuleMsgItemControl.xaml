@@ -8,9 +8,12 @@
     xmlns:ic="using:FluentIcons.WinUI"
     xmlns:local="using:ElectronBot.Copilot.Controls.Chat"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:myconverters="using:Verdure.WinUI.Common.Converters"
     Loading="UserControl_Loading"
     mc:Ignorable="d">
-
+    <UserControl.Resources>
+        <myconverters:UtcToLocalTimeConverter x:Key="UtcToLocalTimeConverter" />
+    </UserControl.Resources>
     <Grid ColumnSpacing="8">
         <controls:CardPanel
             x:Name="RootCard"
@@ -143,7 +146,7 @@
                             FontSize="12"
                             Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                             Style="{StaticResource CaptionTextBlockStyle}"
-                            Text="{x:Bind ViewModel.CreatedAt, Mode=OneWay}" />
+                            Text="{x:Bind ViewModel.CreatedAt,, Converter={StaticResource UtcToLocalTimeConverter}, ConverterParameter='yyyy-MM-dd HH:mm:ss', Mode=OneWay}" />
                     </StackPanel>
 
                 </Grid>

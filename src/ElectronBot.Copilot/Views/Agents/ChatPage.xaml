@@ -5,21 +5,35 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:chat="using:ElectronBot.Copilot.Controls.Chat"
     xmlns:community="using:CommunityToolkit.WinUI.Controls"
+    xmlns:controls="using:ElectronBot.Copilot.Controls"
     xmlns:converters="using:CommunityToolkit.WinUI.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:i="using:Microsoft.Xaml.Interactivity"
     xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:models="using:BotSharp.Abstraction.Conversations.Models">
+    xmlns:models="using:BotSharp.Abstraction.Conversations.Models"
+    xmlns:myconverters="using:Verdure.WinUI.Common.Converters">
     <Page.Resources>
         <DataTemplate x:Key="ContactListViewTemplate" x:DataType="models:Conversation">
-            <TextBlock
-                Margin="0,8,0,8"
-                x:Phase="1"
-                Text="{x:Bind Title}"
-                TextWrapping="WrapWholeWords" />
+            <Grid Padding="12,8" ColumnSpacing="8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock
+                    MaxLines="1"
+                    Text="{x:Bind Title}"
+                    TextTrimming="CharacterEllipsis"
+                    TextWrapping="NoWrap" />
+                <TextBlock
+                    Grid.Column="1"
+                    VerticalAlignment="Center"
+                    Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                    Style="{StaticResource CaptionTextBlockStyle}"
+                    Text="{x:Bind CreatedTime, Converter={StaticResource UtcToLocalTimeConverter}, ConverterParameter='MM-dd'}" />
+            </Grid>
         </DataTemplate>
-
+        <myconverters:UtcToLocalTimeConverter x:Key="UtcToLocalTimeConverter" />
 
     </Page.Resources>
     <Grid x:Name="ContentArea">
@@ -27,27 +41,19 @@
             <ColumnDefinition Width="auto" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <!--<ListView
+        <ListView
             x:Name="ConvList"
             Grid.Column="0"
             Width="200"
             Height="480"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
-            BorderBrush="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"
-            BorderThickness="1"
             IsItemClickEnabled="True"
+            ItemClick="ConvList_ItemClick"
             ItemTemplate="{StaticResource ContactListViewTemplate}"
             ItemsSource="{x:Bind ViewModel.ConversationList, Mode=OneWay}"
-            SelectedIndex="0"
-            SelectedItem="{x:Bind ViewModel.SelectedConversation, Mode=TwoWay}">
-            <i:Interaction.Behaviors>
-                <ic:EventTriggerBehavior EventName="ItemClick">
-                    <ic:InvokeCommandAction Command="{x:Bind ViewModel.ConvSelectCommand}" CommandParameter="{x:Bind ConvList.SelectedItem, Mode=TwoWay}" />
-                </ic:EventTriggerBehavior>
-            </i:Interaction.Behaviors>
-        </ListView>-->
-        <chat:ChatSessionListPanel ViewModel="{x:Bind ViewModel, Mode=OneWay}" />
+            SelectedIndex="0" />
+        <!--<chat:ChatSessionListPanel Width="240" ViewModel="{x:Bind ViewModel, Mode=OneWay}" />-->
         <StackPanel Grid.Column="1">
             <Grid Background="{ThemeResource LayerFillColorDefaultBrush}">
                 <Grid.RowDefinitions>

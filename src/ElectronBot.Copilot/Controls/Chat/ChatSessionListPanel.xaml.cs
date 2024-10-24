@@ -1,5 +1,7 @@
 ﻿// Copyright (c) Rodel. All rights reserved.
 
+using ElectronBot.Copilot.ViewModels;
+
 namespace ElectronBot.Copilot.Controls.Chat;
 
 /// <summary>
@@ -25,8 +27,9 @@ public sealed partial class ChatSessionListPanel : ChatModuleControl
         //ViewModel.RemoveSessionCommand.Execute(context);
     }
 
-    private void OnItemClick(object sender, BotSharp.Abstraction.Conversations.Models.Conversation e)
+    private async void RootCard_Click(object sender, RoutedEventArgs e)
     {
-        ViewModel.ConvSelectCommand.Execute(e);
+        var context = (sender as FrameworkElement)?.DataContext as ChatViewModel;
+        await ViewModel.ConvSelectCommand.ExecuteAsync(context?.SelectedConversation);
     }
 }

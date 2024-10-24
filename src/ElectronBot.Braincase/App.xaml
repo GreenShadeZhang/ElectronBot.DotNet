@@ -16,7 +16,6 @@
                 <ResourceDictionary Source="/Styles/Toast.xaml" />
                 <ResourceDictionary Source="ms-appx:///ElectronBot.Copilot/Controls/Chat/CardPanel/CardPanel.xaml" />
                 <ResourceDictionary Source="ms-appx:///ElectronBot.Copilot/Styles/Overwrites.xaml" />
-                <ResourceDictionary Source="ms-appx:///ElectronBot.Copilot/Controls/Chat/ChatSessionItemControl/ChatSessionItemControl.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <FontFamily x:Key="TimeFont">/Assets/Font/DINPro-Regular.otf#DINPro</FontFamily>
             <FontFamily x:Key="TimeFontBold">/Assets/Font/DINPro-Bold.otf#DINPro</FontFamily>
