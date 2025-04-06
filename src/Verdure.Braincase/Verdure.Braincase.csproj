@@ -38,6 +38,7 @@
   <ItemGroup>
     <Content Remove="Assets\alipay.JPG" />
     <Content Remove="Assets\cat_with_wry_smile_3d.png" />
+    <Content Remove="Assets\Emoji\alarm-clock.png" />
     <Content Remove="Assets\Emoji\anger.png" />
     <Content Remove="Assets\Emoji\disdain.png" />
     <Content Remove="Assets\Emoji\excited.png" />
@@ -63,6 +64,8 @@
   <ItemGroup>
     <None Remove="Assets\Cubemap_Grandcanyon.dds" />
     <None Remove="Assets\DefaultIcon.png" />
+    <None Remove="Assets\Emoji\alarm-clock.mp4" />
+    <None Remove="Assets\Emoji\alarm-clock.zip" />
     <None Remove="Assets\Emoji\anger.json" />
     <None Remove="Assets\Emoji\defaultaction.json" />
     <None Remove="Assets\Emoji\disdain.json" />
@@ -83,6 +86,7 @@
     <None Remove="Assets\Font\SmileySans-Oblique.ttf" />
     <None Remove="Assets\Images\CustomViewDefault.jpg" />
     <None Remove="Assets\Images\Hw75CustomViewDefault.png" />
+    <None Remove="Assets\LottieFiles\alarm-clock.json" />
     <None Remove="Assets\LottieFiles\LottieLogo.json" />
     <None Remove="Assets\model.onnx" />
     <None Remove="Assets\pig.ico" />
@@ -314,6 +318,9 @@
     <Content Update="Assets\Cubemap_Grandcanyon.dds">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Update="Assets\Emoji\alarm-clock.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Update="Assets\Emoji\anger.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -321,6 +328,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Update="Assets\Emoji\defaultaction.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\Emoji\think.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Update="Assets\Emoji\disdain.json">
@@ -350,16 +360,19 @@
     <Content Update="Assets\Emoji\left.zip">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Update="Assets\Emoji\look.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Update="Assets\Emoji\speak.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Update="Assets\Emoji\look.json">
+    <Content Update="Assets\Emoji\look1.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Update="Assets\Emoji\normal.zip">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Update="Assets\Emoji\think.json">
+    <Content Update="Assets\Emoji\think1.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Update="Assets\Emoji\right.json">
@@ -430,6 +443,12 @@
     <None Update="Assets\cat_with_wry_smile_3d.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Assets\Emoji\alarm-clock.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <Content Update="Assets\Emoji\alarm-clock.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Update="Assets\Emoji\anger.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -473,6 +492,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <Content Update="Assets\LottieFiles\LottieLogo.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\LottieFiles\alarm-clock1.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\LottieFiles\alarm-clock.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Update="Assets\MLModel1.zip">
