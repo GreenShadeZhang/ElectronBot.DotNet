@@ -254,8 +254,6 @@ public class EbHelper
                                 rgbData[rgbIndex + 2] = rgbaPixel.R;
                             }
                         }
-
-
                     }
                     var frame = new EmoticonActionFrame(
                              rgbData, true, action.J1, action.J2, action.J3, action.J4, action.J5, action.J6);

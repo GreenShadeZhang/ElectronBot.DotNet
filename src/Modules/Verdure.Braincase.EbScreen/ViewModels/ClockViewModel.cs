@@ -77,11 +77,12 @@ public partial class ClockViewModel : ObservableRecipient
     [RelayCommand]
     public void OnUnLoaded()
     {
+        _diagnosticService.ClockDiagnosticInfoResult -= DiagnosticService_ClockDiagnosticInfoResult;
         //_dispatcherTimer.Tick -= DispatcherTimer_Tick;
         _dispatcherTimer.Stop();
     }
 
-    private void DiagnosticService_ClockDiagnosticInfoResult(object sender, ClockDiagnosticInfo e)
+    private void DiagnosticService_ClockDiagnosticInfoResult(object? sender, ClockDiagnosticInfo e)
     {
         var dispatcherQueue = Ioc.Default.GetRequiredService<ICompositorProvider>().GetWindow().DispatcherQueue;
         dispatcherQueue.TryEnqueue(() =>
@@ -90,13 +91,16 @@ public partial class ClockViewModel : ObservableRecipient
         });
     }
 
-    private async void DispatcherTimer_Tick(object sender, object e)
+    private async void DispatcherTimer_Tick(object? sender, object e)
     {
         TodayTime = DateTimeOffset.Now.ToString("T");
         TodayWeek = DateTimeOffset.Now.ToString("ddd");
         Day = DateTimeOffset.Now.Day.ToString();
 
-        _ = await _diagnosticService.InvokeClockViewAsync(sender);
+        if (sender != null)
+        {
+            _ = await _diagnosticService.InvokeClockViewAsync(sender);
+        }
     }
 
     public ClockViewModel(DispatcherTimer dispatcherTimer,

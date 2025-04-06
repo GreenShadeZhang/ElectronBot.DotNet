@@ -20,7 +20,6 @@ public partial class ElectronBotPlayer
 
                 var emotion = await emojisFileService.GetEmojisFileWithVideoStreamAsync(nameId);
 
-
                 _actions = JsonSerializer.Deserialize<List<ElectronBotAction>>(emotion.EmojisActionJson);
 
                 var localSettingsService = Ioc.Default.GetRequiredService<ILocalSettingsService>();
@@ -40,7 +39,7 @@ public partial class ElectronBotPlayer
                         _player.AudioDevice = selectedDevice;
                     }
                 }
-                IRandomAccessStream randomAccessStream = emotion.EmojisVideo.AsRandomAccessStream();
+                var randomAccessStream = emotion.EmojisVideo.AsRandomAccessStream();
 
                 _player.SetStreamSource(randomAccessStream);
                 _player.Play();

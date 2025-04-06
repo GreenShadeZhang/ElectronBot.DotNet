@@ -172,16 +172,16 @@ public class BotToolService : IBotToolService
             // 获取转换后的数据
             var rgbData = new byte[image.Width * image.Height * 3];
 
-            // 遍历每个像素，将Rgba32转换为Bgr24
+            // 遍历每个像素，将Rgba32转换为RGB24
             for (var y = 0; y < image.Height; y++)
             {
                 for (var x = 0; x < image.Width; x++)
                 {
                     var rgbaPixel = image[x, y];
                     var rgbIndex = (y * image.Width + x) * 3;
-                    rgbData[rgbIndex] = rgbaPixel.B;
-                    rgbData[rgbIndex + 1] = rgbaPixel.G;
-                    rgbData[rgbIndex + 2] = rgbaPixel.R;
+                    rgbData[rgbIndex] = rgbaPixel.R;     // R 通道
+                    rgbData[rgbIndex + 1] = rgbaPixel.G; // G 通道
+                    rgbData[rgbIndex + 2] = rgbaPixel.B; // B 通道
                 }
             }
 
@@ -260,23 +260,23 @@ public class BotToolService : IBotToolService
             });
 
             //var destinationFolder = await KnownFolders.PicturesLibrary
-            //    .CreateFolderAsync("ElectronBot\\Hw75View", CreationCollisionOption.OpenIfExists);
+            //   .CreateFolderAsync("ElectronBot\\Hw75View", CreationCollisionOption.OpenIfExists);
 
             //image.Save($"{destinationFolder.Path}\\" + "word.jpg");
 
             // 获取转换后的数据
             var rgbData = new byte[image.Width * image.Height * 3];
 
-            // 遍历每个像素，将Rgba32转换为Bgr24
+            // 遍历每个像素，将Rgba32转换为RGB24
             for (var y = 0; y < image.Height; y++)
             {
                 for (var x = 0; x < image.Width; x++)
                 {
                     var rgbaPixel = image[x, y];
                     var rgbIndex = (y * image.Width + x) * 3;
-                    rgbData[rgbIndex] = rgbaPixel.B;
-                    rgbData[rgbIndex + 1] = rgbaPixel.G;
-                    rgbData[rgbIndex + 2] = rgbaPixel.R;
+                    rgbData[rgbIndex] = rgbaPixel.R;     // R 通道
+                    rgbData[rgbIndex + 1] = rgbaPixel.G; // G 通道
+                    rgbData[rgbIndex + 2] = rgbaPixel.B; // B 通道
                 }
             }
 

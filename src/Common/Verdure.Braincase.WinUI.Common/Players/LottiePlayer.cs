@@ -253,15 +253,16 @@ public class LottiePlayer : IDisposable
     {
         var rgbData = new byte[image.Width * image.Height * 3];
 
+        // 遍历每个像素，将Rgba32转换为RGB24
         for (var y = 0; y < image.Height; y++)
         {
             for (var x = 0; x < image.Width; x++)
             {
-                var pixel = image[x, y];
+                var rgbaPixel = image[x, y];
                 var rgbIndex = (y * image.Width + x) * 3;
-                rgbData[rgbIndex] = pixel.B;
-                rgbData[rgbIndex + 1] = pixel.G;
-                rgbData[rgbIndex + 2] = pixel.R;
+                rgbData[rgbIndex] = rgbaPixel.R;     // R 通道
+                rgbData[rgbIndex + 1] = rgbaPixel.G; // G 通道
+                rgbData[rgbIndex + 2] = rgbaPixel.B; // B 通道
             }
         }
 

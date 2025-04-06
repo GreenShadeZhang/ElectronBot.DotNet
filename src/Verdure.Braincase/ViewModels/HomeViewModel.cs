@@ -243,10 +243,20 @@ public partial class HomeViewModel : ObservableRecipient, INavigationAware, IRec
         var saveClockView = await _localSettingsService
             .ReadSettingAsync<string>(Constants.CurrentClockViewKey);
 
-        var clockView = string.IsNullOrEmpty(saveClockView) ? "DefautView" : saveClockView;
-        var viewProvider = _viewProviderFactory.CreateClockViewProvider(clockView);
+        var clockName = string.IsNullOrEmpty(saveClockView) ? "DefautView" : saveClockView;
+        var viewProvider = _viewProviderFactory.CreateClockViewProvider(clockName);
 
-        Element = viewProvider.CreateClockView(clockView);
+
+        if (clockName == "GooeyFooter" || clockName == "CustomView" || clockName == "GrooveView")
+        {
+            _dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 30);
+        }
+        else
+        {
+            _dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
+        }
+
+        Element = viewProvider.CreateClockView(clockName);
 
         var modeName = await _localSettingsService.ReadSettingAsync<string>(Constants.CurrentModeKey);
         if (!string.IsNullOrWhiteSpace(modeName))

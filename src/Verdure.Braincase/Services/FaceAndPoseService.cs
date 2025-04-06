@@ -116,16 +116,16 @@ public class FaceAndPoseService
                         // 获取转换后的数据
                         var rgbData = new byte[image2.Width * image2.Height * 3];
 
-                        // 遍历每个像素，将Rgba32转换为Bgr24
+                        // 遍历每个像素，将Rgba32转换为RGB24
                         for (var y = 0; y < image2.Height; y++)
                         {
                             for (var x = 0; x < image2.Width; x++)
                             {
                                 var rgbaPixel = image2[x, y];
                                 var rgbIndex = (y * image2.Width + x) * 3;
-                                rgbData[rgbIndex] = rgbaPixel.B;
-                                rgbData[rgbIndex + 1] = rgbaPixel.G;
-                                rgbData[rgbIndex + 2] = rgbaPixel.R;
+                                rgbData[rgbIndex] = rgbaPixel.R;     // R 通道
+                                rgbData[rgbIndex + 1] = rgbaPixel.G; // G 通道
+                                rgbData[rgbIndex + 2] = rgbaPixel.B; // B 通道
                             }
                         }
                         _faceData = rgbData;
@@ -162,9 +162,9 @@ public class FaceAndPoseService
                         {
                             var rgbaPixel = image3[x, y];
                             var rgbIndex = (y * image3.Width + x) * 3;
-                            rgbData2[rgbIndex] = rgbaPixel.B;
-                            rgbData2[rgbIndex + 1] = rgbaPixel.G;
-                            rgbData2[rgbIndex + 2] = rgbaPixel.R;
+                            rgbData2[rgbIndex] = rgbaPixel.R;     // R 通道
+                            rgbData2[rgbIndex + 1] = rgbaPixel.G; // G 通道
+                            rgbData2[rgbIndex + 2] = rgbaPixel.B; // B 通道
                         }
                     }
 
