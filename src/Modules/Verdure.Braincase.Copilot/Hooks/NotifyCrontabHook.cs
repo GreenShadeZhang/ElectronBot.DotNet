@@ -4,20 +4,22 @@ using BotSharp.Core.Crontab.Abstraction;
 using Microsoft.Extensions.Logging;
 using Microsoft.Windows.AppNotifications;
 using Microsoft.Windows.AppNotifications.Builder;
-using Verdure.Braincase.Core.Contracts.Services;
 
 namespace Verdure.Braincase.Copilot.Hooks;
 
 public class NotifyCrontabHook : ICrontabHook
 {
     private readonly IServiceProvider _services;
+    private readonly IElectronBotPlayer _electronBotPlayer;
     private readonly ILogger<NotifyCrontabHook> _logger;
 
     public NotifyCrontabHook(IServiceProvider services,
-        ILogger<NotifyCrontabHook> logger)
+        ILogger<NotifyCrontabHook> logger,
+        IElectronBotPlayer electronBotPlayer)
     {
         _services = services;
         _logger = logger;
+        _electronBotPlayer = electronBotPlayer;
     }
 
     public async Task OnCronTriggered(CrontabItem item)
@@ -78,8 +80,30 @@ public class NotifyCrontabHook : ICrontabHook
 
     public async Task OnTaskExecuted(CrontabItem item)
     {
-        var speech = _services.GetRequiredService<IBotSpeech>();
+        //var speech = _services.GetRequiredService<IBotSpeech>();
 
-        await speech.SpeakAsync(item.Title);
+        //await speech.SpeakAsync(item.Title);
+        await _electronBotPlayer.StopLottiePlaybackAsync();
+
+        try
+        {
+            // 启动动画但不阻塞当前执行流程
+            var animationTask = _electronBotPlayer.PlayLottieByNameIdAsync("alarm-clock", -1);
+
+            // 可以选择添加异常处理
+            animationTask?.ContinueWith(t =>
+            {
+                if (t.IsFaulted)
+                {
+                    _logger.LogError($"Animation playback failed: {t.Exception}");
+                }
+            }, TaskContinuationOptions.OnlyOnFaulted);
+        }
+        catch (Exception ex)
+        {
+            await _electronBotPlayer.StopLottiePlaybackAsync();
+            _logger.LogError($"Failed to start animation: {ex.Message}");
+            // 根据需要处理异常
+        }
     }
 }

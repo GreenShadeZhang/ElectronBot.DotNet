@@ -3,7 +3,6 @@ using System.Net.Http.Json;
 using System.Net.Mime;
 using System.Text.Encodings.Web;
 using System.Text.Json;
-using System.Threading;
 using BotSharp.Abstraction.Conversations;
 using BotSharp.Abstraction.Conversations.Models;
 using BotSharp.Abstraction.MLTasks;
@@ -51,7 +50,7 @@ public class CustomGenerateImageFn : IFunctionCallback
     {
         var args = JsonSerializer.Deserialize<CustomGenerateImageFunctionArgs>(message.FunctionArgs ?? "", _options) ?? new CustomGenerateImageFunctionArgs();
 
-        message.StopCompletion = true;
+        //message.StopCompletion = true;
 
         var clientFactory = _service.GetRequiredService<IHttpClientFactory>();
         using var httpClient = clientFactory.CreateClient();
@@ -135,10 +134,15 @@ public class CustomGenerateImageFn : IFunctionCallback
                 });
 
                 WeakReferenceMessenger.Default.Send(lingxiSpace);
-                _ = Task.Run(async () =>
+
+                try
                 {
-                    await _botToolService.SendImageDataToBotSettingAsync($"data:{MediaTypeNames.Image.Png};base64,{base64Image}");
-                });
+                    await _botToolService.SendImageDataToBotSettingAsync(lingxiSpace.Id, $"data:{MediaTypeNames.Image.Png};base64,{base64Image}");
+                }
+                catch (Exception ex)
+                {
+                    // 处理异常
+                }
                 break;
             }
             await Task.Delay(10000); // 等待5秒后再次轮询

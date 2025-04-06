@@ -9,7 +9,7 @@ public partial class ElectronBotPlayer
     private async Task ProcessFrame(LottieFrameEventArgs frameData)
     {
         var name = await _localSettingsService.ReadSettingAsync<string>(Constants.CurrentModeKey);
-        if (name == "NaturalMode")
+        if (name == "NaturalMode" || frameData.NameId == "alarm-clock")
         {
             //var frame = new EmoticonActionFrame(frameData.FrameData, false);
             await _actionFrameService.SendToUsbDeviceAsync(frameData.ActionFrameData);

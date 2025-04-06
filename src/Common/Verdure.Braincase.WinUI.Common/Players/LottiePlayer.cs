@@ -133,6 +133,7 @@ public class LottiePlayer : IDisposable
                             {
                                 var frameData = new LottieFrameEventArgs
                                 {
+                                    NameId = nameId,
                                     ActionFrameData = actionFrameData,
                                     FrameData = rgbData,
                                     Height = Height,

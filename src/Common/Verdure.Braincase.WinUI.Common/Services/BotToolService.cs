@@ -2,6 +2,7 @@
 using System.Text;
 using System.Threading;
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.UI.Dispatching;
 using Models;
 using SixLabors.Fonts;
 using SixLabors.ImageSharp;
@@ -18,9 +19,11 @@ namespace Verdure.Braincase.WinUI.Common.Services;
 public class BotToolService : IBotToolService
 {
     private readonly IBotIotService _botIotService;
+    private readonly DispatcherQueue _dispatcherQueue;
     public BotToolService(IBotIotService botIotService)
     {
         _botIotService = botIotService;
+        _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
     }
     public Task SendBliFansToBotAsync(CancellationToken cancellationToken = default) => throw new NotImplementedException();
     public async Task<string> SendWeatherToBotAsync(CancellationToken cancellationToken = default)
@@ -208,7 +211,7 @@ public class BotToolService : IBotToolService
 
             botIcon.Mutate(x =>
             {
-                x.Resize(new Size(40, 40));
+                x.Resize(new Size(48, 48));
             });
 
             var bigTextOptions = new TextOptions(bigFont)
@@ -236,9 +239,9 @@ public class BotToolService : IBotToolService
 
             image.Mutate(ctx =>
             {
-                ctx.DrawImage(botIcon, new Point((image.Width - 40) / 2, (int)yOffset), opacity: 1);
+                ctx.DrawImage(botIcon, new Point((image.Width - 48) / 2, (int)yOffset), opacity: 1);
 
-                yOffset += 40 + 8;
+                yOffset += 48 + 8;
                 foreach (var wordLine in wordLines)
                 {
                     var size = TextMeasurer.MeasureSize(wordLine, bigTextOptions);
@@ -288,23 +291,20 @@ public class BotToolService : IBotToolService
         }
     }
 
-    public async Task SendImageDataToBotSettingAsync(string imageData, CancellationToken cancellationToken = default)
+    public async Task SendImageDataToBotSettingAsync(string id, string imageData, CancellationToken cancellationToken = default)
     {
-        var folder = ApplicationData.Current.LocalFolder;
-
-        var storageFolder = await folder.CreateFolderAsync(Constants.EmojisFolder, CreationCollisionOption.OpenIfExists);
+        var storageFolder = await KnownFolders.PicturesLibrary
+            .CreateFolderAsync("ElectronBot\\data\\ImageFiles", CreationCollisionOption.OpenIfExists);
 
         var storageFile = await storageFolder
-            .CreateFileAsync($"CustomViewPicture-{DateTime.Now.Second}.png", CreationCollisionOption.ReplaceExisting);
+            .CreateFileAsync($"CustomViewPicture-{id}.png", CreationCollisionOption.ReplaceExisting);
 
         var localSettingsService = Ioc.Default.GetRequiredService<ILocalSettingsService>();
 
         var botSetting = await localSettingsService.ReadSettingAsync<BotSetting>(Constants.BotSettingKey);
         if (botSetting != null && !string.IsNullOrEmpty(imageData))
         {
-            var writeableBitmapImage = await ImageHelper.WriteableBitmapFromBase64StringAsync(imageData);
-
-            if (await ImageHelper.SaveWriteableBitmapImageFileAsync(writeableBitmapImage, storageFile))
+            if (await ImageHelper.SaveBase64StringToImageFileAsync(imageData, storageFile.Path))
             {
                 botSetting.CustomViewPicturePath = storageFile.Path;
                 await localSettingsService.SaveSettingAsync(Constants.BotSettingKey, botSetting);

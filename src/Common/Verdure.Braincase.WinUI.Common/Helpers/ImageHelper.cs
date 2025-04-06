@@ -2,6 +2,8 @@
 using System.Runtime.InteropServices.WindowsRuntime;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media.Imaging;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
 using Verdure.Braincase.WinUI.Common.Models;
 using Verdure.Braincase.WinUI.Common.Services;
 using Verdure.Braincase.WinUI.Common.Services.Picker;
@@ -118,5 +120,44 @@ public static class ImageHelper
             await writeableBitmap.SetSourceAsync(stream);
         }
         return writeableBitmap;
+    }
+
+    public static async Task<bool> SaveBase64StringToImageFileAsync(string base64String, string filePath, int width = 1024, int height = 1024)
+    {
+        if (string.IsNullOrEmpty(base64String) || string.IsNullOrEmpty(filePath))
+        {
+            return false;
+        }
+
+        try
+        {
+            // 转换base64为字节数组
+            var imageBytes = Convert.FromBase64String(base64String.Replace($"data:{MediaTypeNames.Image.Png};base64,", ""));
+
+            // 确保目标目录存在
+            var directory = Path.GetDirectoryName(filePath);
+
+            if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+
+            // 使用ImageSharp加载和保存图像
+            using var image = SixLabors.ImageSharp.Image.Load(imageBytes);
+            // 调整图像大小（如果需要）
+            if (image.Width != width || image.Height != height)
+            {
+                image.Mutate(x => x.Resize(new SixLabors.ImageSharp.Size(width, height)));
+            }
+
+            // 保存图像为PNG
+            await image.SaveAsync(filePath);
+
+            return true;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
     }
 }

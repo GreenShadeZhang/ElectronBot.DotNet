@@ -21,4 +21,8 @@ public class LottieFrameEventArgs
     {
         get; set;
     }
+    public string NameId
+    {
+        get; set;
+    } = string.Empty;
 }

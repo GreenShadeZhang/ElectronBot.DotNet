@@ -1,10 +1,11 @@
-﻿using System.Diagnostics;
+﻿using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text.Json;
-using Verdure.Braincase.Services;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media.Imaging;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using Verdure.Braincase.Core.Models;
 using Verdure.Braincase.WinUI.Common.Models;
@@ -13,9 +14,6 @@ using Windows.Graphics.Imaging;
 using Windows.Media.Devices;
 using Windows.Storage;
 using Windows.Storage.Streams;
-using System.Linq;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp;
 
 namespace Verdure.Braincase.Helpers;
 
@@ -342,7 +340,7 @@ public class EbHelper
         else
         {
             //ElectronBotHelper.Instance.ModelActionInvoke(new ModelActionFrame(new MemoryStream(), false,
-                //frameData.J1, frameData.J2, frameData.J3, frameData.J4, frameData.J5, frameData.J6));
+            //frameData.J1, frameData.J2, frameData.J3, frameData.J4, frameData.J5, frameData.J6));
 
             //ElectronBotHelper.Instance.PlayEmoticonActionFrame(frameData);
         }
@@ -439,7 +437,7 @@ public class EbHelper
     {
         var bitmap = new RenderTargetBitmap();
 
-        await bitmap.RenderAsync(element);
+        await bitmap.RenderAsync(element, 240, 240);
 
         var pixels = await bitmap.GetPixelsAsync();
 
@@ -521,7 +519,7 @@ public class EbHelper
         {
             var bitmap = new RenderTargetBitmap();
 
-            await bitmap.RenderAsync(element);
+            await bitmap.RenderAsync(element, 240, 240);
 
             var pixels = await bitmap.GetPixelsAsync();
 

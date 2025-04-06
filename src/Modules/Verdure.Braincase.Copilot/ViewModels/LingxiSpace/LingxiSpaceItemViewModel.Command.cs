@@ -17,13 +17,11 @@ public partial class LingxiSpaceItemViewModel : ObservableRecipient
     {
         if (select is LingxiSpaceItemViewModel image)
         {
-            var folder = ApplicationData.Current.LocalFolder;
-
-            var storageFolder = await folder.CreateFolderAsync(Constants.EmojisFolder, CreationCollisionOption.OpenIfExists);
+            var storageFolder = await KnownFolders.PicturesLibrary
+                .CreateFolderAsync("ElectronBot\\data\\ImageFiles", CreationCollisionOption.OpenIfExists);
 
             var storageFile = await storageFolder
-                .CreateFileAsync($"CustomViewPicture-{DateTime.Now.Second}.png", CreationCollisionOption.ReplaceExisting);
-
+                .CreateFileAsync($"CustomViewPicture-{image.Id}.png", CreationCollisionOption.ReplaceExisting);
             var localSettingsService = Ioc.Default.GetRequiredService<ILocalSettingsService>();
 
             var botSetting = await localSettingsService.ReadSettingAsync<BotSetting>(Constants.BotSettingKey);

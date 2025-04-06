@@ -90,7 +90,7 @@ public class Hw75Helper
             {
                 var renderTargetBitmap = new RenderTargetBitmap();
 
-                await renderTargetBitmap.RenderAsync(element);
+                await renderTargetBitmap.RenderAsync(element, 240, 240);
 
                 var pixelBuffer = await renderTargetBitmap.GetPixelsAsync();
 

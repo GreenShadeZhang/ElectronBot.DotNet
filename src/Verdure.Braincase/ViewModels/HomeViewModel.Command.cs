@@ -190,6 +190,11 @@ public partial class HomeViewModel
 
         ModeIndex = ModeNameToIndex(modeName);
 
+        var saveClockView = await _localSettingsService
+            .ReadSettingAsync<string>(Constants.CurrentClockViewKey);
+
+        var clockName = string.IsNullOrEmpty(saveClockView) ? "DefautView" : saveClockView;
+
         if (modeName == "NaturalMode")
         {
             if (!ElectronBotHelper.Instance.EbConnected)
@@ -200,12 +205,15 @@ public partial class HomeViewModel
             {
                 await ResetActionAsync();
 
-                var clockName = ClockComBoxSelect?.DataKey;
-
-                if (clockName != "GooeyFooter" && clockName != "CustomView")
+                if (clockName == "GooeyFooter" || clockName == "CustomView" || clockName == "GrooveView")
+                {
+                    _dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 30);
+                }
+                else
                 {
                     _dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
                 }
+
                 _dispatcherTimer.Start();
             }
         }
@@ -219,9 +227,11 @@ public partial class HomeViewModel
             {
                 await ResetActionAsync();
 
-                var clockName = ClockComBoxSelect?.DataKey;
-
-                if (clockName != "GooeyFooter" && clockName != "CustomView")
+                if (clockName == "GooeyFooter" || clockName == "CustomView" || clockName == "GrooveView")
+                {
+                    _dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 30);
+                }
+                else
                 {
                     _dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
                 }
