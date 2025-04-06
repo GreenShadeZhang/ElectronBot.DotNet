@@ -1,17 +1,9 @@
-using System.Collections.Generic;
-using System.Text.Json;
 using System.Threading.Tasks;
 using BotSharp.Abstraction.Crontab.Models;
 using BotSharp.Core.Crontab.Abstraction;
-using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Windows.AppNotifications;
 using Microsoft.Windows.AppNotifications.Builder;
-using Verdure.Braincase.Core.Contracts.Services.EmojisFile;
-using Verdure.Braincase.Core.Models.Emojis.Enums;
-using Verdure.Braincase.WinUI.Common.Contracts.Services;
-using Verdure.Braincase.WinUI.Common.Models;
-using Windows.ApplicationModel;
 
 namespace Verdure.Braincase.Copilot.Hooks;
 
@@ -88,50 +80,50 @@ public class NotifyCrontabHook : ICrontabHook
 
     public async Task OnTaskExecuted(CrontabItem item)
     {
-        try
-        {
-            var emojisFileService = Ioc.Default.GetRequiredService<IEmojisFileService>();
+        //try
+        //{
+        //    var emojisFileService = Ioc.Default.GetRequiredService<IEmojisFileService>();
 
-            var emojis = await emojisFileService.GetEmojisFileWithVideoStreamAsync("alarm-clock");
+        //    var emojis = await emojisFileService.GetEmojisFileWithVideoStreamAsync("alarm-clock");
 
-            List<ElectronBotAction> actions = new();
+        //    List<ElectronBotAction> actions = new();
 
-            if (emojis.HasAction)
-            {
-                if (!string.IsNullOrWhiteSpace(emojis.EmojisActionJson))
-                {
-                    try
-                    {
-                        var actionList = JsonSerializer.Deserialize<List<ElectronBotAction>>(emojis.EmojisActionJson);
+        //    if (emojis.HasAction)
+        //    {
+        //        if (!string.IsNullOrWhiteSpace(emojis.EmojisActionJson))
+        //        {
+        //            try
+        //            {
+        //                var actionList = JsonSerializer.Deserialize<List<ElectronBotAction>>(emojis.EmojisActionJson);
 
-                        if (actionList != null && actionList.Count > 0)
-                        {
-                            actions = actionList;
-                        }
-                    }
-                    catch (Exception)
-                    {
+        //                if (actionList != null && actionList.Count > 0)
+        //                {
+        //                    actions = actionList;
+        //                }
+        //            }
+        //            catch (Exception)
+        //            {
 
-                    }
-                }
-            }
+        //            }
+        //        }
+        //    }
 
-            string? videoPath;
+        //    string? videoPath;
 
-            if (emojis.Type == EmojisFileType.Default)
-            {
-                videoPath = Package.Current.InstalledLocation.Path + $"\\Assets\\Emoji\\{emojis.NameId}.mp4";
-            }
-            else
-            {
-                videoPath = emojis.EmojisVideoPath;
-            }
-            await _electronBotPlayer.PlayVideoByPathAsync(videoPath, actions);
-        }
-        catch (Exception)
-        {
+        //    if (emojis.Type == EmojisFileType.Default)
+        //    {
+        //        videoPath = Package.Current.InstalledLocation.Path + $"\\Assets\\Emoji\\{emojis.NameId}.mp4";
+        //    }
+        //    else
+        //    {
+        //        videoPath = emojis.EmojisVideoPath;
+        //    }
+        //    await _electronBotPlayer.PlayVideoByPathAsync(videoPath, actions);
+        //}
+        //catch (Exception)
+        //{
 
-        }
+        //}
         //await _electronBotPlayer.PlayVideoByNameIdAsync("alarm-clock");
 
         //var speech = _services.GetRequiredService<IBotSpeech>();
@@ -139,25 +131,26 @@ public class NotifyCrontabHook : ICrontabHook
         //await speech.SpeakAsync(item.Title);
         //await _electronBotPlayer.StopLottiePlaybackAsync();
 
-        //try
-        //{
-        //    // 启动动画但不阻塞当前执行流程
-        //    var animationTask = _electronBotPlayer.PlayLottieByNameIdAsync("alarm-clock", -1);
+        try
+        {
+            await _electronBotPlayer.StopLottiePlaybackAsync();
+            // 启动动画但不阻塞当前执行流程
+            var animationTask = _electronBotPlayer.DirectPlayLottieByNameIdAsync("alarm-clock", 2);
 
-        //    // 可以选择添加异常处理
-        //    animationTask?.ContinueWith(t =>
-        //    {
-        //        if (t.IsFaulted)
-        //        {
-        //            _logger.LogError($"Animation playback failed: {t.Exception}");
-        //        }
-        //    }, TaskContinuationOptions.OnlyOnFaulted);
-        //}
-        //catch (Exception ex)
-        //{
-        //    await _electronBotPlayer.StopLottiePlaybackAsync();
-        //    _logger.LogError($"Failed to start animation: {ex.Message}");
-        //    // 根据需要处理异常
-        //}
+            // 可以选择添加异常处理
+            animationTask?.ContinueWith(t =>
+            {
+                if (t.IsFaulted)
+                {
+                    _logger.LogError($"Animation playback failed: {t.Exception}");
+                }
+            }, TaskContinuationOptions.OnlyOnFaulted);
+        }
+        catch (Exception ex)
+        {
+            await _electronBotPlayer.StopLottiePlaybackAsync();
+            _logger.LogError($"Failed to start animation: {ex.Message}");
+            // 根据需要处理异常
+        }
     }
 }

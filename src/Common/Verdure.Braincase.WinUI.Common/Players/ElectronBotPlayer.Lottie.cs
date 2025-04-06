@@ -32,6 +32,12 @@ public partial class ElectronBotPlayer
         await _lottiePlayer.PlayAsync(nameId, path, times);
     }
 
+    public async Task DirectPlayLottieByNameIdAsync(string nameId, int times)
+    {
+        var path = Package.Current.InstalledLocation.Path + $"\\Assets\\LottieFiles\\{nameId}.json";
+        await _lottiePlayer.DirectPlayAsync(nameId, path, times);
+    }
+
     // 提供停止播放的方法
     public async Task StopLottiePlaybackAsync()
     {

@@ -1,7 +1,5 @@
-﻿using CommunityToolkit.Mvvm.Messaging;
-using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Xaml;
 using Models;
-using Verdure.Braincase.WinUI.Common.Players;
 
 namespace Verdure.Braincase.ViewModels;
 
@@ -85,10 +83,10 @@ public partial class ClockViewModel : ObservableRecipient
     private void DiagnosticService_ClockDiagnosticInfoResult(object? sender, ClockDiagnosticInfo e)
     {
         var dispatcherQueue = Ioc.Default.GetRequiredService<ICompositorProvider>().GetWindow().DispatcherQueue;
-        dispatcherQueue.TryEnqueue(() =>
-        {
-            ClockDiagnosticInfo = e ?? new ClockDiagnosticInfo();
-        });
+        dispatcherQueue?.TryEnqueue(() =>
+            {
+                ClockDiagnosticInfo = e ?? new ClockDiagnosticInfo();
+            });
     }
 
     private async void DispatcherTimer_Tick(object? sender, object e)

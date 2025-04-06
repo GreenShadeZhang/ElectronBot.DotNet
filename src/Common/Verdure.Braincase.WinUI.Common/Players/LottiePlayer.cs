@@ -191,6 +191,121 @@ public class LottiePlayer : IDisposable
         }
     }
 
+
+    /// <summary>
+    /// 直接播放Lottie动画
+    /// </summary>
+    /// <param name="nameId">表情ID</param>
+    /// <param name="filePath">Lottie JSON文件路径</param>
+    /// <param name="loopCount">循环次数，-1表示无限循环</param>
+    /// <returns></returns>
+    public async Task DirectPlayAsync(string nameId, string filePath, int loopCount = 1)
+    {
+        await _semaphore.WaitAsync();
+        try
+        {
+            if (_isPlaying)
+            {
+                await StopAsync();
+            }
+
+            _cancellationTokenSource = new CancellationTokenSource();
+            _isPlaying = true;
+
+            // 加载动画
+            _currentAnimation = Animation.Create(filePath);
+
+            if (_currentAnimation == null)
+            {
+                throw new InvalidOperationException($"Failed to load Lottie animation from: {filePath}");
+            }
+
+            var actionPath = Package.Current.InstalledLocation.Path + $"\\Assets\\Emoji\\{nameId}.json";
+
+            var actionString = await File.ReadAllTextAsync(actionPath);
+
+            var actions = JsonSerializer.Deserialize<List<ElectronBotAction>>(actionString) ?? [];
+
+            // 通知动画开始
+            var eventArgs = new LottieEventArgs { FilePath = filePath };
+
+            PlayStarted?.Invoke(this, eventArgs);
+
+            // 开始播放动画循环
+            await Task.Run(async () =>
+            {
+                try
+                {
+                    var currentLoop = 0;
+                    while ((loopCount < 0 || currentLoop < loopCount) && !_cancellationTokenSource.Token.IsCancellationRequested)
+                    {
+                        _currentAnimation.Seek(0);
+                        var frameCount = _currentAnimation.OutPoint;
+
+                        for (var i = 0; i < frameCount; i++)
+                        {
+                            if (_cancellationTokenSource.Token.IsCancellationRequested)
+                                break;
+
+                            // 计算进度
+                            var progress = i / frameCount * _currentAnimation.Duration.TotalSeconds;
+
+                            // 渲染当前帧
+                            var frameImage = RenderLottieFrame(_currentAnimation, progress, Width, Height);
+
+                            // 处理帧数据
+                            var rgbData = ConvertImageToRgbData(frameImage);
+
+
+                            var action = new ElectronBotAction();
+
+                            if (actions.Count > 0)
+                            {
+                                var index = (int)(i / frameCount * actions.Count);
+                                action = actions[index];
+                            }
+
+                            var actionFrameData = new EmoticonActionFrame(rgbData, true,
+                                action.J1,
+                                action.J2,
+                                action.J3,
+                                action.J4,
+                                action.J5,
+                                action.J6);
+
+                            var emojisService = Ioc.Default.GetRequiredService<IEmoticonActionFrameService>();
+                            await emojisService.SendToUsbDeviceAsync(actionFrameData);
+                        }
+
+                        currentLoop++;
+                    }
+
+                    if (!_cancellationTokenSource.Token.IsCancellationRequested)
+                    {
+                        PlayCompleted?.Invoke(this, eventArgs);
+                    }
+                }
+                catch (OperationCanceledException)
+                {
+                    // 预期的取消操作，不需要处理
+                }
+                catch (Exception ex)
+                {
+                    // 记录异常但不抛出
+                    Console.WriteLine($"Error during Lottie playback: {ex}");
+                }
+                finally
+                {
+                    _isPlaying = false;
+                }
+            });
+        }
+        finally
+        {
+            _semaphore.Release();
+        }
+    }
+
     /// <summary>
     /// 停止播放动画
     /// </summary>
